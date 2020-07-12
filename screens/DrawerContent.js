@@ -1,10 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import {
-    DrawerContentScrollView,
-    DrawerItem
-} from '@react-navigation/drawer';
-import {
+    useTheme,
     Avatar,
     Title,
     Caption,
@@ -14,15 +11,44 @@ import {
     TouchableRipple,
     Switch
 } from 'react-native-paper';
+import {
+    DrawerContentScrollView,
+    DrawerItem
+} from '@react-navigation/drawer';
+
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import { AuthContext } from '../components/context';
+import AsyncStorage from '@react-native-community/async-storage';
+import Users from '../model/users';
 
 export function DrawerContent(props) {
 
-    const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+    const paperTheme = useTheme();
 
-    const toggleTheme = () => {
-        setIsDarkTheme(!isDarkTheme);
-    }
+    const { signOut, toggleTheme } = React.useContext(AuthContext);
+
+    const [data, setData] = React.useState({
+        name: 'anhtv',
+        email: 'anhtv@gmail.com'
+    });
+
+    useEffect(() => {
+
+        const getToken = async () => {
+            try {
+                let userToken = await AsyncStorage.getItem('userToken');
+                console.log(userToken);
+                const user = Users.filter(item => item.userToken == `${userToken}`);
+                console.log(user)
+                setData({ name: user[0].username, email: user[0].email });
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        getToken();
+
+    }, []);
 
     return (
         <View style={{ flex: 1 }}>
@@ -37,8 +63,8 @@ export function DrawerContent(props) {
                                 size={50}
                             />
                             <View style={{ marginLeft: 15, flexDirection: 'column' }}>
-                                <Title style={styles.title}>John Doe</Title>
-                                <Caption style={styles.caption}>@j_doe</Caption>
+                                <Title style={styles.title}>{data.name}</Title>
+                                <Caption style={styles.caption}>{data.email}</Caption>
                             </View>
                         </View>
 
@@ -94,7 +120,7 @@ export function DrawerContent(props) {
                             <View style={styles.preference}>
                                 <Text>Dark Theme</Text>
                                 <View pointerEvents="none">
-                                    <Switch value={isDarkTheme} />
+                                    <Switch value={paperTheme.dark} />
                                 </View>
                             </View>
                         </TouchableRipple>
@@ -111,11 +137,11 @@ export function DrawerContent(props) {
                         />
                     )}
                     label="Sign Out"
-                    onPress={() => { }}
+                    onPress={() => { signOut() }}
                 />
             </Drawer.Section>
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
