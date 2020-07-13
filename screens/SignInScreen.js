@@ -19,6 +19,8 @@ import { useTheme } from 'react-native-paper';
 import { AuthContext } from '../components/context';
 
 import Users from '../model/users';
+import auth from '@react-native-firebase/auth';
+import { LoginManager, AccessToken } from 'react-native-fbsdk';
 
 const SignInScreen = ({ navigation }) => {
 
@@ -110,6 +112,21 @@ const SignInScreen = ({ navigation }) => {
             return;
         }
         signIn(foundUser);
+    }
+
+    onLoginFacebook = () => {
+        LoginManager.logInWithPermissions(['public_profile', 'email'])
+            .then(result => {
+                if (result.isCancelled) {
+                    throw 'User cancelled the login process';
+                }
+                return AccessToken.getCurrentAccessToken();
+            }).then(data => {
+                const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+                return auth().signInWithCredential(facebookCredential);
+            }).then(currentUser => {
+                console.log(currentUser)
+            }).catch(error => console.log(error))
     }
 
     return (
@@ -226,7 +243,7 @@ const SignInScreen = ({ navigation }) => {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('SignUpScreen')}
+                        onPress={onLoginFacebook}
                         style={[styles.signIn, {
                             borderColor: '#009387',
                             borderWidth: 1,
@@ -235,7 +252,7 @@ const SignInScreen = ({ navigation }) => {
                     >
                         <Text style={[styles.textSign, {
                             color: '#009387'
-                        }]}>Sign Up</Text>
+                        }]}>Login with Facebook</Text>
                     </TouchableOpacity>
                 </View>
             </Animatable.View>

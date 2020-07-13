@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1066127115976",
+    "firebase_url": "https://petdatingk12fptu.firebaseio.com",
+    "project_id": "petdatingk12fptu",
+    "storage_bucket": "petdatingk12fptu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1066127115976:android:52873d2d6521a87fa4c7fd",
+        "android_client_info": {
+          "package_name": "com.petdating"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1066127115976-o21o94nik7t18hvvd1dgmioou5rirvk5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAnzjAf910sCXERJqlWmhdktGyl_R02HE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1066127115976-o21o94nik7t18hvvd1dgmioou5rirvk5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
