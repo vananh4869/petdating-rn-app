@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1066127115976-5h5evdi5ep7k5oqaf2h0aba49s5e5qgr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.petdating",
+            "certificate_hash": "51844274cfbe849f85a61ce9e4d2bdcdbcac5b54"
+          }
+        },
+        {
           "client_id": "1066127115976-o21o94nik7t18hvvd1dgmioou5rirvk5.apps.googleusercontent.com",
           "client_type": 3
         }

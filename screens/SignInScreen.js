@@ -21,7 +21,10 @@ import { AuthContext } from '../components/context';
 import Users from '../model/users';
 import auth from '@react-native-firebase/auth';
 import { LoginManager, AccessToken } from 'react-native-fbsdk';
-
+import { GoogleSignin } from '@react-native-community/google-signin';
+GoogleSignin.configure({
+    webClientId: '1066127115976-o21o94nik7t18hvvd1dgmioou5rirvk5.apps.googleusercontent.com',
+});
 const SignInScreen = ({ navigation }) => {
 
     const [data, setData] = React.useState({
@@ -114,7 +117,7 @@ const SignInScreen = ({ navigation }) => {
         signIn(foundUser);
     }
 
-    onLoginFacebook = () => {
+    const onLoginFacebook = () => {
         LoginManager.logInWithPermissions(['public_profile', 'email'])
             .then(result => {
                 if (result.isCancelled) {
@@ -128,6 +131,28 @@ const SignInScreen = ({ navigation }) => {
                 console.log(currentUser)
             }).catch(error => console.log(error))
     }
+
+    const onLoginGoogle = () => {
+        GoogleSignin.signIn()
+            .then(result => {
+                console.log(result)
+                const { idToken } = result;
+                const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+                return auth().signInWithCredential(googleCredential);
+            }).then(currentUser => {
+                console.log(currentUser)
+            }).catch(err => console.log('Error:', err))
+    }
+
+    const signInGG = async () => {
+        try {
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
+            console.log(userInfo)
+        } catch (error) {
+            console.log('aaa', error)
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -253,6 +278,18 @@ const SignInScreen = ({ navigation }) => {
                         <Text style={[styles.textSign, {
                             color: '#009387'
                         }]}>Login with Facebook</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={signInGG}
+                        style={[styles.signIn, {
+                            borderColor: '#009387',
+                            borderWidth: 1,
+                            marginTop: 15
+                        }]}
+                    >
+                        <Text style={[styles.textSign, {
+                            color: '#009387'
+                        }]}>Login with Google</Text>
                     </TouchableOpacity>
                 </View>
             </Animatable.View>
