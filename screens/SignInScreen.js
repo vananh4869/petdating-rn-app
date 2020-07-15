@@ -23,8 +23,10 @@ import auth from '@react-native-firebase/auth';
 import { LoginManager, AccessToken } from 'react-native-fbsdk';
 import { GoogleSignin } from '@react-native-community/google-signin';
 GoogleSignin.configure({
-    webClientId: '1066127115976-o21o94nik7t18hvvd1dgmioou5rirvk5.apps.googleusercontent.com',
+    webClientId: '1066127115976-t88eq8fnvmm0vitbmutk8khc8qoqdb9b.apps.googleusercontent.com',
+    offlineAccess: true
 });
+import axios from 'axios';
 const SignInScreen = ({ navigation }) => {
 
     const [data, setData] = React.useState({
@@ -95,26 +97,33 @@ const SignInScreen = ({ navigation }) => {
         }
     }
 
-    const loginHandle = (userName, password) => {
+    const loginHandle = (user) => {
 
-        const foundUser = Users.filter(item => {
-            return userName == item.username && password == item.password;
-        });
+        // const foundUser = Users.filter(item => {
+        //     return userName == item.username && password == item.password;
+        // });
 
-        if (data.username.length == 0 || data.password.length == 0) {
-            Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
-                { text: 'Okay' }
-            ]);
-            return;
-        }
+        // if (data.username.length == 0 || data.password.length == 0) {
+        //     Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
+        //         { text: 'Okay' }
+        //     ]);
+        //     return;
+        // }
 
-        if (foundUser.length == 0) {
-            Alert.alert('Invalid User!', 'Username or password is incorrect.', [
-                { text: 'Okay' }
-            ]);
-            return;
-        }
-        signIn(foundUser);
+        // if (foundUser.length == 0) {
+        //     Alert.alert('Invalid User!', 'Username or password is incorrect.', [
+        //         { text: 'Okay' }
+        //     ]);
+        //     return;
+        // }
+        // api.post('/login2', {
+        //     user_id: "390482348",
+        //     name: "abc",
+        //     email: "abc@abc.com"
+        // }).then(res => {
+        //     const { pd_token } = res[0];
+        //     signIn(pd_token);
+        // })
     }
 
     const onLoginFacebook = () => {
@@ -129,6 +138,8 @@ const SignInScreen = ({ navigation }) => {
                 return auth().signInWithCredential(facebookCredential);
             }).then(currentUser => {
                 console.log(currentUser)
+                signIn('abclkdjdfkjsdlfjsldkfjlsdkjf')
+
             }).catch(error => console.log(error))
     }
 
@@ -144,15 +155,6 @@ const SignInScreen = ({ navigation }) => {
             }).catch(err => console.log('Error:', err))
     }
 
-    const signInGG = async () => {
-        try {
-            await GoogleSignin.hasPlayServices();
-            const userInfo = await GoogleSignin.signIn();
-            console.log(userInfo)
-        } catch (error) {
-            console.log('aaa', error)
-        }
-    };
 
     return (
         <View style={styles.container}>
@@ -280,7 +282,7 @@ const SignInScreen = ({ navigation }) => {
                         }]}>Login with Facebook</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        onPress={signInGG}
+                        onPress={onLoginGoogle}
                         style={[styles.signIn, {
                             borderColor: '#009387',
                             borderWidth: 1,

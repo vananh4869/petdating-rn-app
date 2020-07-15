@@ -32,17 +32,17 @@ import RootStackScreen from './screens/RootStackScreen';
 
 import AsyncStorage from '@react-native-community/async-storage';
 
+// import axios from 'axios';
+// axios.defaults.baseURL = 'localhost:3000';
+
 const Drawer = createDrawerNavigator();
 
 const App = () => {
-  // const [isLoading, setIsLoading] = React.useState(true);
-  // const [userToken, setUserToken] = React.useState(null); 
 
   const [isDarkTheme, setIsDarkTheme] = React.useState(false);
 
   const initialLoginState = {
     isLoading: true,
-    userName: null,
     userToken: null,
   };
 
@@ -83,7 +83,6 @@ const App = () => {
         console.log('LOGIN');
         return {
           ...prevState,
-          userName: action.id,
           userToken: action.token,
           isLoading: false,
         };
@@ -91,7 +90,6 @@ const App = () => {
         console.log('LOGOUT');
         return {
           ...prevState,
-          userName: null,
           userToken: null,
           isLoading: false,
         };
@@ -99,7 +97,6 @@ const App = () => {
         console.log('REGISTER');
         return {
           ...prevState,
-          userName: action.id,
           userToken: action.token,
           isLoading: false,
         };
@@ -109,24 +106,17 @@ const App = () => {
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
 
   const authContext = React.useMemo(() => ({
-    signIn: async (foundUser) => {
-      // setUserToken('fgkj');
-      // setIsLoading(false);
-      console.log('signIn');
-      const userToken = String(foundUser[0].userToken);
-      const userName = foundUser[0].username;
+    signIn: async (userToken) => {
 
       try {
         await AsyncStorage.setItem('userToken', userToken);
       } catch (e) {
         console.log(e);
       }
-      // console.log('user token: ', userToken);
-      dispatch({ type: 'LOGIN', id: userName, token: userToken });
+      // axios.defaults.headers.common['Authorization'] = userToken;
+      dispatch({ type: 'LOGIN', token: userToken });
     },
     signOut: async () => {
-      // setUserToken(null);
-      // setIsLoading(false);
       console.log('signOut');
       try {
         await AsyncStorage.removeItem('userToken');
@@ -136,8 +126,6 @@ const App = () => {
       dispatch({ type: 'LOGOUT' });
     },
     signUp: () => {
-      // setUserToken('fgkj');
-      // setIsLoading(false);
     },
     toggleTheme: () => {
       setIsDarkTheme(isDarkTheme => !isDarkTheme);
@@ -146,16 +134,16 @@ const App = () => {
 
   useEffect(() => {
     setTimeout(async () => {
-      // setIsLoading(false);
       console.log('useEffect');
-      let userToken;
-      userToken = null;
+      let userToken = null;
       try {
         userToken = await AsyncStorage.getItem('userToken');
       } catch (e) {
         console.log(e);
       }
-      // console.log('user token: ', userToken);
+      if (!userToken) {
+        // axios.defaults.headers.common['Authorization'] = userToken;
+      }
       dispatch({ type: 'RETRIEVE_TOKEN', token: userToken });
     }, 1000);
   }, []);
