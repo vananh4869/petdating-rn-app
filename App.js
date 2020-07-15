@@ -32,8 +32,8 @@ import RootStackScreen from './screens/RootStackScreen';
 
 import AsyncStorage from '@react-native-community/async-storage';
 
-// import axios from 'axios';
-// axios.defaults.baseURL = 'localhost:3000';
+import axios from 'axios';
+axios.defaults.baseURL = 'https://pet-dating-server.herokuapp.com/api/';
 
 const Drawer = createDrawerNavigator();
 
@@ -113,7 +113,7 @@ const App = () => {
       } catch (e) {
         console.log(e);
       }
-      // axios.defaults.headers.common['Authorization'] = userToken;
+      axios.defaults.headers.common['Authorization'] = userToken;
       dispatch({ type: 'LOGIN', token: userToken });
     },
     signOut: async () => {
@@ -142,7 +142,7 @@ const App = () => {
         console.log(e);
       }
       if (!userToken) {
-        // axios.defaults.headers.common['Authorization'] = userToken;
+        axios.defaults.headers.common['Authorization'] = userToken;
       }
       dispatch({ type: 'RETRIEVE_TOKEN', token: userToken });
     }, 1000);

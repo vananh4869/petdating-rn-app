@@ -9,35 +9,42 @@ import {
     Platform,
     StyleSheet,
     ScrollView,
-    StatusBar
+    StatusBar,
+    Alert
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import auth from '@react-native-firebase/auth';
+import { AuthContext } from '../components/context';
+import axios from 'axios';
 
 const SignInScreen = ({ navigation }) => {
 
+    const { signIn } = React.useContext(AuthContext);
+
     const [data, setData] = React.useState({
-        username: '',
+        email: '',
         password: '',
         confirm_password: '',
         check_textInputChange: false,
         secureTextEntry: true,
         confirm_secureTextEntry: true,
+        isValidConfirmPassword: true
     });
 
     const textInputChange = (val) => {
         if (val.length !== 0) {
             setData({
                 ...data,
-                username: val,
+                email: val,
                 check_textInputChange: true
             });
         } else {
             setData({
                 ...data,
-                username: val,
+                email: val,
                 check_textInputChange: false
             });
         }
@@ -51,10 +58,19 @@ const SignInScreen = ({ navigation }) => {
     }
 
     const handleConfirmPasswordChange = (val) => {
-        setData({
-            ...data,
-            confirm_password: val
-        });
+        if (data.password == val) {
+            setData({
+                ...data,
+                confirm_password: val,
+                isValidConfirmPassword: true
+            })
+        } else {
+            setData({
+                ...data,
+                confirm_password: val,
+                isValidConfirmPassword: false
+            })
+        }
     }
 
     const updateSecureTextEntry = () => {
@@ -71,6 +87,39 @@ const SignInScreen = ({ navigation }) => {
         });
     }
 
+    const onCreateUser = () => {
+
+        if (data.password === data.confirm_password) {
+            auth()
+                .createUserWithEmailAndPassword(data.email, data.password)
+                .then((user) => {
+                    console.log('User account created & signed in!', user);
+                    return axios.post('/register', { email: data.email })
+                }).then(res => {
+                    const { pd_token } = res.data;
+                    console.log(res.data)
+                    signIn(pd_token);
+                }).catch(error => {
+                    if (error.code === 'auth/email-already-in-use') {
+                        Alert.alert('Error', 'That email address is already in use!')
+                    }
+
+                    if (error.code === 'auth/invalid-email') {
+                        Alert.alert('Error', 'That email address is invalid!')
+                    }
+
+                    if (error.code === 'auth/weak-password') {
+                        Alert.alert('Error', 'Password should be at least 6 characters ')
+                    }
+
+                    console.error(error);
+                });
+        } else {
+            Alert.alert('Error', 'Confirm password is not correct!')
+        }
+    }
+
+
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor='#009387' barStyle="light-content" />
@@ -82,7 +131,7 @@ const SignInScreen = ({ navigation }) => {
                 style={styles.footer}
             >
                 <ScrollView>
-                    <Text style={styles.text_footer}>Username</Text>
+                    <Text style={styles.text_footer}>Email</Text>
                     <View style={styles.action}>
                         <FontAwesome
                             name="user-o"
@@ -90,7 +139,7 @@ const SignInScreen = ({ navigation }) => {
                             size={20}
                         />
                         <TextInput
-                            placeholder="Your Username"
+                            placeholder="Your Email"
                             style={styles.textInput}
                             autoCapitalize="none"
                             onChangeText={(val) => textInputChange(val)}
@@ -177,6 +226,11 @@ const SignInScreen = ({ navigation }) => {
                             }
                         </TouchableOpacity>
                     </View>
+                    {data.isValidConfirmPassword ? null :
+                        <Animatable.View animation="fadeInLeft" duration={500}>
+                            <Text style={styles.errorMsg}>Confirm Password is invalid.</Text>
+                        </Animatable.View>
+                    }
                     <View style={styles.textPrivate}>
                         <Text style={styles.color_textPrivate}>
                             By signing up you agree to our
@@ -188,7 +242,7 @@ const SignInScreen = ({ navigation }) => {
                     <View style={styles.button}>
                         <TouchableOpacity
                             style={styles.signIn}
-                            onPress={() => { }}
+                            onPress={onCreateUser}
                         >
                             <LinearGradient
                                 colors={['#08d4c4', '#01ab9d']}
@@ -233,7 +287,7 @@ const styles = StyleSheet.create({
         paddingBottom: 50
     },
     footer: {
-        flex: Platform.OS === 'ios' ? 3 : 5,
+        flex: Platform.OS === 'ios' ? 4 : 7,
         backgroundColor: '#fff',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
@@ -284,5 +338,9 @@ const styles = StyleSheet.create({
     },
     color_textPrivate: {
         color: 'grey'
+    },
+    errorMsg: {
+        color: '#FF0000',
+        fontSize: 14,
     }
 });

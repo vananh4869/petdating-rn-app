@@ -30,7 +30,7 @@ import axios from 'axios';
 const SignInScreen = ({ navigation }) => {
 
     const [data, setData] = React.useState({
-        username: '',
+        email: '',
         password: '',
         check_textInputChange: false,
         secureTextEntry: true,
@@ -43,17 +43,17 @@ const SignInScreen = ({ navigation }) => {
     const { signIn } = React.useContext(AuthContext);
 
     const textInputChange = (val) => {
-        if (val.trim().length >= 4) {
+        if (val.trim().length >= 6) {
             setData({
                 ...data,
-                username: val,
+                email: val,
                 check_textInputChange: true,
                 isValidUser: true
             });
         } else {
             setData({
                 ...data,
-                username: val,
+                email: val,
                 check_textInputChange: false,
                 isValidUser: false
             });
@@ -61,7 +61,7 @@ const SignInScreen = ({ navigation }) => {
     }
 
     const handlePasswordChange = (val) => {
-        if (val.trim().length >= 8) {
+        if (val.trim().length >= 6) {
             setData({
                 ...data,
                 password: val,
@@ -97,34 +97,33 @@ const SignInScreen = ({ navigation }) => {
         }
     }
 
-    const loginHandle = (user) => {
+    const onSingIn = () => {
+        auth()
+            .signInWithEmailAndPassword(data.email, data.password)
+            .then((user) => {
+                console.log('User account created & signed in!', user);
+                return axios.post('/register', { email: data.email })
+            }).then(res => {
+                const { pd_token } = res.data;
+                console.log(res.data)
+                signIn(pd_token);
+            }).catch(error => {
+                if (error.code === 'auth/wrong-password') {
+                    Alert.alert('Error', 'The password is invalid or the user does not have a password!')
+                }
 
-        // const foundUser = Users.filter(item => {
-        //     return userName == item.username && password == item.password;
-        // });
+                if (error.code === 'auth/invalid-email') {
+                    Alert.alert('Error', 'That email address is invalid!')
+                }
 
-        // if (data.username.length == 0 || data.password.length == 0) {
-        //     Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
-        //         { text: 'Okay' }
-        //     ]);
-        //     return;
-        // }
+                if (error.code === 'auth/weak-password') {
+                    Alert.alert('Error', 'Password should be at least 6 characters ')
+                }
 
-        // if (foundUser.length == 0) {
-        //     Alert.alert('Invalid User!', 'Username or password is incorrect.', [
-        //         { text: 'Okay' }
-        //     ]);
-        //     return;
-        // }
-        // api.post('/login2', {
-        //     user_id: "390482348",
-        //     name: "abc",
-        //     email: "abc@abc.com"
-        // }).then(res => {
-        //     const { pd_token } = res[0];
-        //     signIn(pd_token);
-        // })
+                console.error(error);
+            });
     }
+
 
     const onLoginFacebook = () => {
         LoginManager.logInWithPermissions(['public_profile', 'email'])
@@ -138,8 +137,6 @@ const SignInScreen = ({ navigation }) => {
                 return auth().signInWithCredential(facebookCredential);
             }).then(currentUser => {
                 console.log(currentUser)
-                signIn('abclkdjdfkjsdlfjsldkfjlsdkjf')
-
             }).catch(error => console.log(error))
     }
 
@@ -170,7 +167,7 @@ const SignInScreen = ({ navigation }) => {
             >
                 <Text style={[styles.text_footer, {
                     color: colors.text
-                }]}>Username</Text>
+                }]}>Email</Text>
                 <View style={styles.action}>
                     <FontAwesome
                         name="user-o"
@@ -178,7 +175,7 @@ const SignInScreen = ({ navigation }) => {
                         size={20}
                     />
                     <TextInput
-                        placeholder="Your Username"
+                        placeholder="Your email"
                         placeholderTextColor="#666666"
                         style={[styles.textInput, {
                             color: colors.text
@@ -201,7 +198,7 @@ const SignInScreen = ({ navigation }) => {
                 </View>
                 {data.isValidUser ? null :
                     <Animatable.View animation="fadeInLeft" duration={500}>
-                        <Text style={styles.errorMsg}>Username must be 4 characters long.</Text>
+                        <Text style={styles.errorMsg}>email must be 4 characters long.</Text>
                     </Animatable.View>
                 }
 
@@ -257,7 +254,7 @@ const SignInScreen = ({ navigation }) => {
                 <View style={styles.button}>
                     <TouchableOpacity
                         style={styles.signIn}
-                        onPress={() => { loginHandle(data.username, data.password) }}
+                        onPress={onSingIn}
                     >
                         <LinearGradient
                             colors={['#08d4c4', '#01ab9d']}
@@ -268,8 +265,20 @@ const SignInScreen = ({ navigation }) => {
                             }]}>Sign In</Text>
                         </LinearGradient>
                     </TouchableOpacity>
-
                     <TouchableOpacity
+                        onPress={() => navigation.navigate('SignUpScreen')}
+                        style={[styles.signIn, {
+                            borderColor: '#009387',
+                            borderWidth: 1,
+                            marginTop: 15
+                        }]}
+                    >
+                        <Text style={[styles.textSign, {
+                            color: '#009387'
+                        }]}>Sign Up</Text>
+                    </TouchableOpacity>
+
+                    {/* <TouchableOpacity
                         onPress={onLoginFacebook}
                         style={[styles.signIn, {
                             borderColor: '#009387',
@@ -292,10 +301,10 @@ const SignInScreen = ({ navigation }) => {
                         <Text style={[styles.textSign, {
                             color: '#009387'
                         }]}>Login with Google</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </Animatable.View>
-        </View>
+        </View >
     );
 };
 
