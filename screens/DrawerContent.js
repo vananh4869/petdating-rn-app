@@ -19,9 +19,8 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { AuthContext } from '../components/context';
-import AsyncStorage from '@react-native-community/async-storage';
-import Users from '../model/users';
-
+import axios from 'axios';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 export function DrawerContent(props) {
 
     const paperTheme = useTheme();
@@ -29,26 +28,32 @@ export function DrawerContent(props) {
     const { signOut, toggleTheme } = React.useContext(AuthContext);
 
     const [data, setData] = React.useState({
-        name: 'anhtv',
-        email: 'anhtv@gmail.com'
+        name: '',
+        email: '',
+        avatar: 'https://api.adorable.io/avatars/50/abott@adorable.png',
+        pets: 0,
+        matches: 0,
     });
-
+    const [reload, setReload] = React.useState(false)
+    const onReloadDrawer = () => {
+        setReload(!reload)
+    }
     useEffect(() => {
 
-        const getToken = async () => {
+        const getData = async () => {
             try {
-                let userToken = await AsyncStorage.getItem('userToken');
-                console.log(userToken);
-                const user = Users.filter(item => item.userToken == `${userToken}`);
-                console.log(user)
-                setData({ name: user[0].username, email: user[0].email });
+                const results = await axios.get('/getDrawer');
+                console.log(results.data)
+                setData({ ...data, ...results.data[0] });
+
             } catch (e) {
                 console.log(e);
             }
         }
-        getToken();
+        getData();
 
-    }, []);
+    }, [reload]);
+
 
     return (
         <View style={{ flex: 1 }}>
@@ -66,15 +71,21 @@ export function DrawerContent(props) {
                                 <Title style={styles.title}>{data.name}</Title>
                                 <Caption style={styles.caption}>{data.email}</Caption>
                             </View>
+                            <TouchableOpacity
+                                onPress={onReloadDrawer}
+                                style={styles.reloadIcon}
+                            >
+                                <Icon name='reload' size={15} />
+                            </TouchableOpacity>
                         </View>
 
                         <View style={styles.row}>
                             <View style={styles.section}>
-                                <Paragraph style={[styles.paragraph, styles.caption]}>80</Paragraph>
+                                <Paragraph style={[styles.paragraph, styles.caption]}>{data.pets}</Paragraph>
                                 <Caption style={styles.caption}>Pets</Caption>
                             </View>
                             <View style={styles.section}>
-                                <Paragraph style={[styles.paragraph, styles.caption]}>100</Paragraph>
+                                <Paragraph style={[styles.paragraph, styles.caption]}>{data.matches}</Paragraph>
                                 <Caption style={styles.caption}>Matches</Caption>
                             </View>
                         </View>
@@ -156,6 +167,10 @@ const styles = StyleSheet.create({
         marginTop: 3,
         fontWeight: 'bold',
     },
+    reloadIcon: {
+        marginTop: 10,
+        marginLeft: 20
+    },
     caption: {
         fontSize: 14,
         lineHeight: 14,
@@ -164,11 +179,14 @@ const styles = StyleSheet.create({
         marginTop: 20,
         flexDirection: 'row',
         alignItems: 'center',
+        flex: 1
     },
     section: {
         flexDirection: 'row',
         alignItems: 'center',
         marginRight: 15,
+        flex: 1,
+        justifyContent: 'center'
     },
     paragraph: {
         fontWeight: 'bold',

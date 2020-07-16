@@ -113,6 +113,7 @@ const App = () => {
       } catch (e) {
         console.log(e);
       }
+      console.log('set auth', userToken)
       axios.defaults.headers.common['Authorization'] = userToken;
       dispatch({ type: 'LOGIN', token: userToken });
     },
@@ -141,7 +142,9 @@ const App = () => {
       } catch (e) {
         console.log(e);
       }
-      if (!userToken) {
+      console.log(userToken)
+      if (userToken) {
+        console.log('set auth')
         axios.defaults.headers.common['Authorization'] = userToken;
       }
       dispatch({ type: 'RETRIEVE_TOKEN', token: userToken });

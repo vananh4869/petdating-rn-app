@@ -18,7 +18,6 @@ import { useTheme } from 'react-native-paper';
 
 import { AuthContext } from '../components/context';
 
-import Users from '../model/users';
 import auth from '@react-native-firebase/auth';
 import { LoginManager, AccessToken } from 'react-native-fbsdk';
 import { GoogleSignin } from '@react-native-community/google-signin';

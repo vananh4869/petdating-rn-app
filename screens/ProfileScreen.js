@@ -10,6 +10,13 @@ import {
 } from 'react-native';
 
 const ProfileScreen = ({ navigation }) => {
+    React.useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            console.log('open profile')
+        });
+
+        return unsubscribe;
+    }, [navigation]);
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Text>ProfileScreen</Text>

@@ -13,14 +13,14 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
 import HomeScreen from './HomeScreen';
-import DetailsScreen from './DetailsScreen';
+import ChatScreen from './ChatScreen';
 import ProfileScreen from './ProfileScreen';
 import ExploreScreen from './ExploreScreen';
 
 
 
 const HomeStack = createStackNavigator();
-const DetailsStack = createStackNavigator();
+const ChatStack = createStackNavigator();
 
 const HomeStackScreen = ({ navigation }) => (
     <HomeStack.Navigator screenOptions={{
@@ -43,8 +43,8 @@ const HomeStackScreen = ({ navigation }) => (
     </HomeStack.Navigator>
 )
 
-const DetailsStackScreen = ({ navigation }) => (
-    <DetailsStack.Navigator screenOptions={{
+const ChatStackScreen = ({ navigation }) => (
+    <ChatStack.Navigator screenOptions={{
         headerStyle: {
             backgroundColor: '#1f65ff'
         },
@@ -53,14 +53,14 @@ const DetailsStackScreen = ({ navigation }) => (
             fontWeight: 'bold'
         }
     }}>
-        <DetailsStack.Screen name="Details" component={DetailsScreen} options={{
-            title: 'Details',
+        <ChatStack.Screen name="Chat" component={ChatScreen} options={{
+            title: 'Chat',
             headerLeft: () => (
                 <Icon.Button name='ios-menu' size={25} backgroundColor='#1f65ff'
                     onPress={() => navigation.openDrawer()}></Icon.Button>
             )
         }} />
-    </DetailsStack.Navigator>
+    </ChatStack.Navigator>
 )
 
 const Tab = createMaterialBottomTabNavigator();
@@ -82,17 +82,6 @@ const MainTabScreen = () => (
             }}
         />
         <Tab.Screen
-            name="Details"
-            component={DetailsStackScreen}
-            options={{
-                tabBarLabel: 'Details',
-                tabBarColor: '#1f65ff',
-                tabBarIcon: ({ color }) => (
-                    <Icon name="ios-notifications" color={color} size={26} />
-                ),
-            }}
-        />
-        <Tab.Screen
             name="Profile"
             component={ProfileScreen}
             options={{
@@ -100,6 +89,17 @@ const MainTabScreen = () => (
                 tabBarColor: '#694fad',
                 tabBarIcon: ({ color }) => (
                     <Icon name="ios-person" color={color} size={26} />
+                ),
+            }}
+        />
+        <Tab.Screen
+            name="ChatStackScreen"
+            component={ChatStackScreen}
+            options={{
+                tabBarLabel: 'Chat',
+                tabBarColor: '#1f65ff',
+                tabBarIcon: ({ color }) => (
+                    <Icon name="chatbubble-ellipses" color={color} size={26} />
                 ),
             }}
         />
