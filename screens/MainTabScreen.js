@@ -21,6 +21,7 @@ import ExploreScreen from './ExploreScreen';
 
 const HomeStack = createStackNavigator();
 const ChatStack = createStackNavigator();
+const ProfileStack = createStackNavigator();
 
 const HomeStackScreen = ({ navigation }) => (
     <HomeStack.Navigator screenOptions={{
@@ -36,7 +37,7 @@ const HomeStackScreen = ({ navigation }) => (
             options={{
                 title: 'Overview',
                 headerLeft: () => (
-                    <Icon.Button name='ios-menu' size={25} backgroundColor='#009387'
+                    <Icon.Button name='md-menu' size={25} backgroundColor='#009387'
                         onPress={() => navigation.openDrawer()}></Icon.Button>
                 )
             }} />
@@ -56,11 +57,18 @@ const ChatStackScreen = ({ navigation }) => (
         <ChatStack.Screen name="Chat" component={ChatScreen} options={{
             title: 'Chat',
             headerLeft: () => (
-                <Icon.Button name='ios-menu' size={25} backgroundColor='#1f65ff'
+                <Icon.Button name='md-menu' size={25} backgroundColor='#1f65ff'
                     onPress={() => navigation.openDrawer()}></Icon.Button>
             )
         }} />
     </ChatStack.Navigator>
+)
+const ProfileStackScreen = ({ navigation }) => (
+    <ProfileStack.Navigator screenOptions={{
+        headerShown: false
+    }}>
+        <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+    </ProfileStack.Navigator>
 )
 
 const Tab = createMaterialBottomTabNavigator();
@@ -77,18 +85,18 @@ const MainTabScreen = () => (
                 tabBarLabel: 'Home',
                 tabBarColor: '#009387',
                 tabBarIcon: ({ color }) => (
-                    <Icon name="ios-home" color={color} size={26} />
+                    <Icon name="md-home" color={color} size={26} />
                 ),
             }}
         />
         <Tab.Screen
             name="Profile"
-            component={ProfileScreen}
+            component={ProfileStackScreen}
             options={{
                 tabBarLabel: 'Profile',
                 tabBarColor: '#694fad',
                 tabBarIcon: ({ color }) => (
-                    <Icon name="ios-person" color={color} size={26} />
+                    <Icon name="md-person" color={color} size={26} />
                 ),
             }}
         />
@@ -99,7 +107,7 @@ const MainTabScreen = () => (
                 tabBarLabel: 'Chat',
                 tabBarColor: '#1f65ff',
                 tabBarIcon: ({ color }) => (
-                    <Icon name="chatbubble-ellipses" color={color} size={26} />
+                    <Icon name="md-chatbox-ellipses" color={color} size={26} />
                 ),
             }}
         />
@@ -110,7 +118,7 @@ const MainTabScreen = () => (
                 tabBarLabel: 'Explore',
                 tabBarColor: '#d02860',
                 tabBarIcon: ({ color }) => (
-                    <Icon name="ios-aperture" color={color} size={26} />
+                    <Icon name="md-search" color={color} size={26} />
                 ),
             }}
         />

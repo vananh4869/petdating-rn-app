@@ -38,21 +38,21 @@ export function DrawerContent(props) {
     const onReloadDrawer = () => {
         setReload(!reload)
     }
-    useEffect(() => {
+    // useEffect(() => {
 
-        const getData = async () => {
-            try {
-                const results = await axios.get('/getDrawer');
-                console.log(results.data)
-                setData({ ...data, ...results.data[0] });
+    //     const getData = async () => {
+    //         try {
+    //             const results = await axios.get('/profile');
+    //             console.log(results.data)
+    //             setData({ ...data, ...results.data[0] });
 
-            } catch (e) {
-                console.log(e);
-            }
-        }
-        getData();
+    //         } catch (e) {
+    //             console.log(e);
+    //         }
+    //     }
+    //     getData();
 
-    }, [reload]);
+    // }, [reload]);
 
 
     return (
@@ -75,7 +75,7 @@ export function DrawerContent(props) {
                                 onPress={onReloadDrawer}
                                 style={styles.reloadIcon}
                             >
-                                <Icon name='reload' size={15} />
+                                {/* <Icon name='md-reload-circle' size={15} /> */}
                             </TouchableOpacity>
                         </View>
 
