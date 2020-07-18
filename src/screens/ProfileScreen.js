@@ -17,7 +17,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Axios from 'axios';
 import { saveUser } from '../actions/auth';
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }) => {
 
     const user = useSelector(state => state.auth.user);
     const pets = useSelector(state => state.auth.pets);
@@ -40,18 +40,25 @@ const ProfileScreen = () => {
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.titleBar}>
                     <TouchableOpacity
-                        onPress={() => { }}
+                        onPress={() => {
+                            navigation.navigate('ProfileStackScreen', {
+                                screen: 'UserSetting',
+                                params: {
+                                    userInfo: user
+                                }
+                            })
+                        }}
                     >
                         <Feather name="more-vertical" size={24} color="#52575D" ></Feather>
                     </TouchableOpacity>
                 </View>
                 <View style={{ alignSelf: "center" }}>
                     <View style={styles.profileImage}>
-                        <Image source={require("../../assets/profile-pic.jpg")} style={styles.image} resizeMode="stretch"></Image>
+                        <Image source={{ uri: user.avatar ? user.avatar : require('../../assets/avatar.jpg') }} style={styles.image} resizeMode="stretch"></Image>
                     </View>
-                    <View style={styles.add}>
+                    {/* <View style={styles.add}>
                         <Icon name="camera" size={48} color="#DFD8C8"></Icon>
-                    </View>
+                    </View> */}
                 </View>
 
                 <View style={styles.infoContainer}>
@@ -63,9 +70,9 @@ const ProfileScreen = () => {
                     </View>
 
                     <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.email}</Text>
-                    <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.phone}</Text>
-                    <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.gender == 1 ? 'Male' : 'Female'}</Text>
-                    <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.birth_date}</Text>
+                    {user.phone && <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.phone}</Text>}
+                    {user.gender && <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.gender == 1 ? 'Male' : 'Female'}</Text>}
+                    {user.birth_date && <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.birth_date}</Text>}
                 </View>
 
                 <View style={styles.statsContainer}>
@@ -73,10 +80,6 @@ const ProfileScreen = () => {
                         <Text style={[styles.text, { fontSize: 24 }]}>{pets.length}</Text>
                         <Text style={[styles.text, styles.subText]}>Pets</Text>
                     </View>
-                    {/* <View style={[styles.statsBox, { borderColor: "#DFD8C8", borderLeftWidth: 1, borderRightWidth: 1 }]}>
-                        <Text style={[styles.text, { fontSize: 24 }]}>45,844</Text>
-                        <Text style={[styles.text, styles.subText]}>Followers</Text>
-                    </View> */}
                     <View style={[styles.statsBox, { borderColor: "#DFD8C8", borderLeftWidth: 1 }]}>
                         <Text style={[styles.text, { fontSize: 24 }]}>302</Text>
                         <Text style={[styles.text, styles.subText]}>Matches</Text>

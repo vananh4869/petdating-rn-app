@@ -17,6 +17,7 @@ import ProfileScreen from './ProfileScreen';
 import { useSelector, useDispatch } from 'react-redux';
 import Axios from 'axios';
 import { saveUser, savePets } from '../actions/auth';
+import UserSettingScreen from './UserSettingScreen';
 
 
 
@@ -24,7 +25,6 @@ import { saveUser, savePets } from '../actions/auth';
 
 const HomeStack = createStackNavigator();
 const ChatStack = createStackNavigator();
-const ProfileStack = createStackNavigator();
 
 const HomeStackScreen = ({ navigation }) => (
     <HomeStack.Navigator screenOptions={{
@@ -66,34 +66,28 @@ const ChatStackScreen = ({ navigation }) => (
         }} />
     </ChatStack.Navigator>
 )
-const ProfileStackScreen = ({ navigation }) => (
-    <ProfileStack.Navigator screenOptions={{
-        headerShown: false
-    }}>
-        <ProfileStack.Screen name="Profile" component={ProfileScreen} />
-    </ProfileStack.Navigator>
-)
+
 
 const Tab = createMaterialBottomTabNavigator();
 
 const MainTabScreen = () => {
 
-    const user = useSelector(state => state.auth.user);
-    const pets = useSelector(state => state.auth.pets);
+    // const user = useSelector(state => state.auth.user);
+    // const pets = useSelector(state => state.auth.pets);
     const dispatch = useDispatch();
 
-    React.useEffect(() => {
-        console.log('get user info')
-        const getUserInfo = async () => {
-            Axios.get('/users/currentUser')
-                .then(res => {
-                    console.log(res.data)
-                    dispatch(saveUser(res.data[0]));
-                })
-                .catch(error => console.log(error))
-        }
-        getUserInfo()
-    }, []);
+    // React.useEffect(() => {
+    //     console.log('get user info')
+    //     const getUserInfo = async () => {
+    //         Axios.get('/users/currentUser')
+    //             .then(res => {
+    //                 console.log(res.data)
+    //                 dispatch(saveUser(res.data[0]));
+    //             })
+    //             .catch(error => console.log(error))
+    //     }
+    //     getUserInfo()
+    // }, []);
 
     React.useEffect(() => {
         console.log('get pets info')
@@ -126,7 +120,7 @@ const MainTabScreen = () => {
             />
             <Tab.Screen
                 name="Profile"
-                component={ProfileStackScreen}
+                component={ProfileScreen}
                 options={{
                     tabBarLabel: 'Profile',
                     tabBarColor: '#694fad',

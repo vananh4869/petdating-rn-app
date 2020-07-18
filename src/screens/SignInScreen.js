@@ -1,6 +1,6 @@
 import { GoogleSignin } from '@react-native-community/google-signin';
 import auth from '@react-native-firebase/auth';
-import axios from 'axios';
+import Axios from 'axios';
 import React from 'react';
 import {
     Alert, Platform,
@@ -13,7 +13,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useTheme } from 'react-native-paper';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { useDispatch, useSelector } from 'react-redux';
 import { AuthContext } from '../components/context';
+import { saveUser } from '../actions/auth';
 
 
 
@@ -35,6 +37,9 @@ const SignInScreen = ({ navigation }) => {
     const { colors } = useTheme();
 
     const { signIn } = React.useContext(AuthContext);
+
+    // const user = useSelector(state => state.auth.user);
+    const dispatch = useDispatch();
 
     const textInputChange = (val) => {
         if (val.trim().length >= 6) {
@@ -96,10 +101,11 @@ const SignInScreen = ({ navigation }) => {
             .signInWithEmailAndPassword(data.email, data.password)
             .then((user) => {
                 console.log('User account created & signed in!', user);
-                return axios.post('/register', { email: data.email })
+                return Axios.post('/register', { email: data.email })
             }).then(res => {
                 const { pd_token } = res.data;
                 console.log(res.data)
+                dispatch(saveUser(res.data));
                 signIn(pd_token);
             }).catch(error => {
                 if (error.code === 'auth/wrong-password') {
@@ -130,8 +136,19 @@ const SignInScreen = ({ navigation }) => {
                 const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
                 return auth().signInWithCredential(facebookCredential);
             }).then(currentUser => {
-                console.log(currentUser)
-            }).catch(error => console.log(error))
+                console.log('USER INFO:', currentUser.user)
+                const { displayName, email, phoneNumber, photoURL } = currentUser.user;
+                return Axios.post('/register', { name: displayName, email, phone: phoneNumber, avatar: photoURL })
+            }).then(res => {
+                const { pd_token } = res.data;
+                console.log(res.data)
+                dispatch(saveUser(res.data));
+                signIn(pd_token);
+            }).catch(error => {
+
+                console.error(error)
+                Alert.alert('Error', `Something's wrong`)
+            })
     }
 
     const onLoginGoogle = () => {
@@ -315,10 +332,10 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-end',
         paddingHorizontal: 20,
-        paddingBottom: 50
+        paddingBottom: 20
     },
     footer: {
-        flex: 3,
+        flex: 5,
         backgroundColor: '#fff',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,

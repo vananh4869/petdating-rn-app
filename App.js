@@ -20,6 +20,7 @@ import RootStackScreen from './src/screens/RootStackScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import { Provider } from 'react-redux';
 import store from './src/store';
+import ProfileStackScreen from './src/screens/ProfileStackScreen';
 
 
 
@@ -162,6 +163,7 @@ const App = () => {
               <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
                 <Drawer.Screen name="HomeDrawer" component={MainTabScreen} />
                 <Drawer.Screen name="SettingsScreen" component={SettingsScreen} />
+                <Drawer.Screen name="ProfileStackScreen" component={ProfileStackScreen} />
               </Drawer.Navigator>
             )
               :
