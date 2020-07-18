@@ -13,9 +13,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useTheme } from 'react-native-paper';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { useDispatch, useSelector } from 'react-redux';
 import { AuthContext } from '../components/context';
-import { saveUser } from '../actions/auth';
+import Entypo from 'react-native-vector-icons/Entypo';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 
@@ -97,6 +97,11 @@ const SignInScreen = ({ navigation }) => {
     }
 
     const onSingIn = () => {
+        if (!data.email || !data.password) {
+            Alert.alert('Error', 'you need to input email and password');
+            return;
+        }
+
         auth()
             .signInWithEmailAndPassword(data.email, data.password)
             .then((user) => {
@@ -290,32 +295,23 @@ const SignInScreen = ({ navigation }) => {
                             }]}>Sign Up</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity
-                            onPress={onLoginFacebook}
-                            style={[styles.signIn, {
-                                borderColor: '#009387',
-                                borderWidth: 1,
-                                marginTop: 15
-                            }]}
-                        >
-                            <Text style={[styles.textSign, {
-                                color: '#009387'
-                            }]}>Login with Facebook</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={onLoginGoogle}
-                            style={[styles.signIn, {
-                                borderColor: '#009387',
-                                borderWidth: 1,
-                                marginTop: 15
-                            }]}
-                        >
-                            <Text style={[styles.textSign, {
-                                color: '#009387'
-                            }]}>Login with Google</Text>
-                        </TouchableOpacity>
+
                     </View>
                 </ScrollView>
+                <View style={styles.fb_gg_container}>
+                    <TouchableOpacity
+                        onPress={onLoginFacebook}
+                        style={[styles.fb_gg]}
+                    >
+                        <Ionicons name='logo-facebook' size={50} />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={onLoginGoogle}
+                        style={[styles.fb_gg]}
+                    >
+                        <Entypo name='google-' size={50} />
+                    </TouchableOpacity>
+                </View>
             </Animatable.View>
         </View >
     );
@@ -327,6 +323,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#009387'
+    },
+    fb_gg_container: {
+        flex: 1,
+        flexDirection: 'row',
+        width: '40%',
+        position: 'absolute',
+        top: -30,
+        right: 10,
+    },
+    fb_gg: {
+        flex: 1,
+        paddingRight: 10,
+        color: '#fff',
     },
     header: {
         flex: 1,

@@ -23,7 +23,7 @@ const SplashScreen = ({ navigation }) => {
                 <Animatable.Image
                     animation="bounceIn"
                     duraton="1500"
-                    source={require('../../assets/logo.png')}
+                    source={require('../../assets/petdating_logo.png')}
                     style={styles.logo}
                     resizeMode="stretch"
                 />
@@ -36,7 +36,7 @@ const SplashScreen = ({ navigation }) => {
             >
                 <Text style={[styles.title, {
                     color: colors.text
-                }]}>Stay connected with everyone!</Text>
+                }]}>Match . Chat . Date</Text>
                 <Text style={styles.text}>Sign in with account</Text>
                 <View style={styles.button}>
                     <TouchableOpacity onPress={() => navigation.navigate('SignInScreen')}>
