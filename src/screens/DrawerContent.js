@@ -54,10 +54,9 @@ export function DrawerContent(props) {
                 <View style={styles.drawerContent}>
                     <View style={styles.userInfoSection}>
                         <View style={{ flexDirection: 'row', marginTop: 15 }}>
+
                             <Avatar.Image
-                                source={{
-                                    uri: user.avatar ? user.avatar : require('../../assets/avatar.jpg')
-                                }}
+                                source={user.avatar ? { uri: user.avatar } : require('../../assets/avatar.jpg')}
                                 size={50}
                             />
                             <View style={{ marginLeft: 15, flexDirection: 'column' }}>
@@ -71,10 +70,10 @@ export function DrawerContent(props) {
                                 <Paragraph style={[styles.paragraph, styles.caption]}>{pets.length}</Paragraph>
                                 <Caption style={styles.caption}>Pets</Caption>
                             </View>
-                            {/* <View style={styles.section}>
-                                <Paragraph style={[styles.paragraph, styles.caption]}>{data.matches}</Paragraph>
+                            <View style={styles.section}>
+                                <Paragraph style={[styles.paragraph, styles.caption]}>{0}</Paragraph>
                                 <Caption style={styles.caption}>Matches</Caption>
-                            </View> */}
+                            </View>
                         </View>
                     </View>
 

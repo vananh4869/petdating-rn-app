@@ -129,7 +129,7 @@ const App = () => {
   }), []);
 
   useEffect(() => {
-    setTimeout(async () => {
+    const getData = async () => {
       console.log('useEffect');
       let userToken = null;
       try {
@@ -141,9 +141,11 @@ const App = () => {
       if (userToken) {
         console.log('set auth')
         Axios.defaults.headers.common['Authorization'] = userToken;
+
       }
       dispatch({ type: 'RETRIEVE_TOKEN', token: userToken });
-    }, 1000);
+    }
+    getData();
   }, []);
 
   if (loginState.isLoading) {

@@ -32,6 +32,7 @@ const HomeStackScreen = ({ navigation }) => (
             backgroundColor: '#009387'
         },
         headerTintColor: '#fff',
+        headerTitleAlign: 'center',
         headerTitleStyle: {
             fontWeight: 'bold'
         }
@@ -52,6 +53,7 @@ const ChatStackScreen = ({ navigation }) => (
         headerStyle: {
             backgroundColor: '#1f65ff'
         },
+        headerTitleAlign: 'center',
         headerTintColor: '#fff',
         headerTitleStyle: {
             fontWeight: 'bold'
@@ -76,18 +78,18 @@ const MainTabScreen = () => {
     // const pets = useSelector(state => state.auth.pets);
     const dispatch = useDispatch();
 
-    // React.useEffect(() => {
-    //     console.log('get user info')
-    //     const getUserInfo = async () => {
-    //         Axios.get('/users/currentUser')
-    //             .then(res => {
-    //                 console.log(res.data)
-    //                 dispatch(saveUser(res.data[0]));
-    //             })
-    //             .catch(error => console.log(error))
-    //     }
-    //     getUserInfo()
-    // }, []);
+    React.useEffect(() => {
+        console.log('get user info')
+        const getUserInfo = async () => {
+            Axios.get('/users/currentUser')
+                .then(res => {
+                    console.log(res.data)
+                    dispatch(saveUser(res.data[0]));
+                })
+                .catch(error => console.log(error))
+        }
+        getUserInfo()
+    }, []);
 
     React.useEffect(() => {
         console.log('get pets info')

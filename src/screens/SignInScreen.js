@@ -39,7 +39,7 @@ const SignInScreen = ({ navigation }) => {
     const { signIn } = React.useContext(AuthContext);
 
     // const user = useSelector(state => state.auth.user);
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
 
     const textInputChange = (val) => {
         if (val.trim().length >= 6) {
@@ -105,7 +105,7 @@ const SignInScreen = ({ navigation }) => {
             }).then(res => {
                 const { pd_token } = res.data;
                 console.log(res.data)
-                dispatch(saveUser(res.data));
+                // dispatch(saveUser(res.data));
                 signIn(pd_token);
             }).catch(error => {
                 if (error.code === 'auth/wrong-password') {
@@ -142,7 +142,7 @@ const SignInScreen = ({ navigation }) => {
             }).then(res => {
                 const { pd_token } = res.data;
                 console.log(res.data)
-                dispatch(saveUser(res.data));
+                // dispatch(saveUser(res.data));
                 signIn(pd_token);
             }).catch(error => {
 

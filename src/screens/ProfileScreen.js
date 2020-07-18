@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import { useSelector, useDispatch } from 'react-redux';
 import Axios from 'axios';
@@ -35,6 +36,11 @@ const ProfileScreen = ({ navigation }) => {
     //     }
     //     getUserInfo()
     // }, []);
+
+    // const onAddPet = () => {
+
+    // }
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -49,24 +55,18 @@ const ProfileScreen = ({ navigation }) => {
                             })
                         }}
                     >
-                        <Feather name="more-vertical" size={24} color="#52575D" ></Feather>
+                        <MaterialCommunityIcons name="account-edit-outline" size={24} color="#52575D" ></MaterialCommunityIcons>
                     </TouchableOpacity>
                 </View>
                 <View style={{ alignSelf: "center" }}>
                     <View style={styles.profileImage}>
-                        <Image source={{ uri: user.avatar ? user.avatar : require('../../assets/avatar.jpg') }} style={styles.image} resizeMode="stretch"></Image>
+                        <Image source={user.avatar ? { uri: user.avatar } : require('../../assets/avatar.jpg')} style={styles.image} resizeMode="cover"></Image>
                     </View>
-                    {/* <View style={styles.add}>
-                        <Icon name="camera" size={48} color="#DFD8C8"></Icon>
-                    </View> */}
                 </View>
 
                 <View style={styles.infoContainer}>
                     <View style={{ flexDirection: 'row' }}>
                         <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{user.name}</Text>
-                        {/* <TouchableOpacity>
-                            <MaterialIcons name='account-edit' size={30} style={{ marginTop: 7 }}></MaterialIcons>
-                        </TouchableOpacity> */}
                     </View>
 
                     <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.email}</Text>
@@ -88,6 +88,7 @@ const ProfileScreen = ({ navigation }) => {
 
                 <View style={{ marginTop: 32 }}>
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                        <View style={{ width: 100 }}></View>
                         <View style={styles.mediaImageContainer}>
                             <Image source={require("../../assets/media1.jpg")} style={styles.image} resizeMode="cover"></Image>
                         </View>
@@ -108,8 +109,8 @@ const ProfileScreen = ({ navigation }) => {
                         </View>
                     </ScrollView>
                     <View style={styles.mediaCount}>
-                        <TouchableOpacity onPress={() => setReload(!reload)}>
-                            <Text>Add</Text>
+                        <TouchableOpacity onPress={() => { navigation.navigate('AddPetScreen') }}>
+                            <Icon name="add" size={50} color="#fff" ></Icon>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -168,7 +169,9 @@ const styles = StyleSheet.create({
         width: 200,
         height: 200,
         borderRadius: 100,
-        overflow: "hidden"
+        overflow: "hidden",
+        borderWidth: 4,
+        borderColor: '#FF1'
     },
     dm: {
         backgroundColor: "#41444B",
@@ -225,10 +228,9 @@ const styles = StyleSheet.create({
     mediaCount: {
         backgroundColor: "#41444B",
         position: "absolute",
-        top: "50%",
-        marginTop: -50,
-        marginLeft: 30,
-        width: 100,
+        top: '25%',
+        left: 10,
+        width: 90,
         height: 100,
         alignItems: "center",
         justifyContent: "center",

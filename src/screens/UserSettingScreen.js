@@ -17,7 +17,9 @@ import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useSelector, useDispatch } from 'react-redux';
 import Axios from 'axios';
-import { saveUser, updateUser } from '../actions/auth';
+import { updateUser } from '../actions/auth';
+import ImagePicker from 'react-native-image-picker';
+import mime from 'mime';
 
 const UserSettingScreen = ({ route, navigation }) => {
     const user = useSelector(state => state.auth.user);
@@ -71,6 +73,53 @@ const UserSettingScreen = ({ route, navigation }) => {
         setIsChange(userInfo[field] != value);
     }
 
+    const handleUploadPicture = () => {
+        let options = {
+            title: 'Select Image',
+            noData: true,
+            maxWidth: 500,
+            maxHeight: 500,
+        };
+        ImagePicker.showImagePicker(options, (response) => {
+            console.log('Response = ', response);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else {
+                const img = {
+                    uri: response.uri,
+                    type: mime.getType(response.uri),
+                    name:
+                        response.fileName ||
+                        response.uri.substr(response.uri.lastIndexOf('/') + 1)
+                }
+                const data = new FormData()
+                data.append('file', img)
+                data.append("upload_preset", "PetDating")
+                data.append("cloud_name", "anhtv4869")
+                fetch('https://api.cloudinary.com/v1_1/anhtv4869/image/upload', {
+                    method: 'POST',
+                    body: data,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                    // .then(res => res.json())
+                    .then(res => {
+                        // setInfo({ avatar: data.url })
+                        setData({
+                            ...data,
+                            avatar: res.url
+                        })
+                        console.log(res)
+                    }).catch(e => {
+                        console.error(e)
+                    })
+            }
+        });
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -88,16 +137,18 @@ const UserSettingScreen = ({ route, navigation }) => {
                 </View>
                 <View style={{ alignSelf: "center" }}>
                     <View style={styles.profileImage}>
-                        <Image source={{ uri: data.avatar ? data.avatar : require('../../assets/avatar.jpg') }} style={styles.image} resizeMode="stretch"></Image>
+                        <Image source={user.avatar ? { uri: data.avatar } : require('../../assets/avatar.jpg')} style={styles.image} resizeMode="cover"></Image>
                     </View>
                     <View style={styles.add}>
-                        <Icon name="camera" size={48} color="#DFD8C8"></Icon>
+                        <TouchableOpacity onPress={handleUploadPicture}>
+                            <Icon name="camera" size={48} color="#DFD8C8"></Icon>
+                        </TouchableOpacity>
                     </View>
                 </View>
 
                 <View style={styles.userContainer}>
                     <View style={styles.userInfo}>
-                        <Feather name='user' />
+                        <Feather name='user' style={styles.icon} size={20} />
                         <TextInput
                             placeholder='Name'
                             value={data.name}
@@ -115,7 +166,7 @@ const UserSettingScreen = ({ route, navigation }) => {
                         />
                     </View> */}
                     <View style={styles.userInfo}>
-                        <Feather name='phone' />
+                        <Feather name='phone' style={styles.icon} size={20} />
                         <TextInput
                             placeholder='Phone'
                             keyboardType="numeric"
@@ -125,7 +176,7 @@ const UserSettingScreen = ({ route, navigation }) => {
                         />
                     </View>
                     <View style={styles.userInfo}>
-                        <FontAwesome name='birthday-cake' />
+                        <FontAwesome name='birthday-cake' style={styles.icon} size={20} />
                         <TextInput
                             placeholder='Birth date'
                             value={data.birth_date}
@@ -176,7 +227,6 @@ const styles = StyleSheet.create({
     },
     userInfo: {
         flexDirection: 'row',
-        height: 100
     },
     userContainer: {
         flex: 1,
@@ -184,10 +234,18 @@ const styles = StyleSheet.create({
         padding: 30,
     },
     textInput: {
-        marginLeft: 10,
-        marginBottom: 5,
+        flex: 9,
+        // marginBottom: 5,
         fontFamily: "HelveticaNeue",
-        color: "#52575D"
+        color: "#52575D",
+        borderBottomWidth: 1,
+        borderBottomColor: 'lightgray'
+    },
+    icon: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        paddingTop: 15,
     }
 });
 export default UserSettingScreen;
