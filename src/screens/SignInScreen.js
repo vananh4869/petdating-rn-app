@@ -1,32 +1,26 @@
+import { GoogleSignin } from '@react-native-community/google-signin';
+import auth from '@react-native-firebase/auth';
+import axios from 'axios';
 import React from 'react';
 import {
-    View,
-    Text,
-    TouchableOpacity,
-    TextInput,
-    Platform,
-    StyleSheet,
-    StatusBar,
-    Alert,
-    ScrollView
+    Alert, Platform,
+    ScrollView, StatusBar, StyleSheet, Text,
+    TextInput, TouchableOpacity, View
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
+import { AccessToken, LoginManager } from 'react-native-fbsdk';
 import LinearGradient from 'react-native-linear-gradient';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Feather from 'react-native-vector-icons/Feather';
-
 import { useTheme } from 'react-native-paper';
-
+import Feather from 'react-native-vector-icons/Feather';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from '../components/context';
 
-import auth from '@react-native-firebase/auth';
-import { LoginManager, AccessToken } from 'react-native-fbsdk';
-import { GoogleSignin } from '@react-native-community/google-signin';
+
+
 GoogleSignin.configure({
     webClientId: '1066127115976-t88eq8fnvmm0vitbmutk8khc8qoqdb9b.apps.googleusercontent.com',
     offlineAccess: true
 });
-import axios from 'axios';
 const SignInScreen = ({ navigation }) => {
 
     const [data, setData] = React.useState({

@@ -21,23 +21,16 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AuthContext } from '../components/context';
 import axios from 'axios';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useSelector } from 'react-redux';
 export function DrawerContent(props) {
 
     const paperTheme = useTheme();
 
     const { signOut, toggleTheme } = React.useContext(AuthContext);
 
-    const [data, setData] = React.useState({
-        name: '',
-        email: '',
-        avatar: 'https://api.adorable.io/avatars/50/abott@adorable.png',
-        pets: 0,
-        matches: 0,
-    });
-    const [reload, setReload] = React.useState(false)
-    const onReloadDrawer = () => {
-        setReload(!reload)
-    }
+
+    const user = useSelector(state => state.auth.user);
+    const pets = useSelector(state => state.auth.pets);
     // useEffect(() => {
 
     //     const getData = async () => {
@@ -52,7 +45,7 @@ export function DrawerContent(props) {
     //     }
     //     getData();
 
-    // }, [reload]);
+    // }, [user,pets]);
 
 
     return (
@@ -68,26 +61,20 @@ export function DrawerContent(props) {
                                 size={50}
                             />
                             <View style={{ marginLeft: 15, flexDirection: 'column' }}>
-                                <Title style={styles.title}>{data.name}</Title>
-                                <Caption style={styles.caption}>{data.email}</Caption>
+                                <Title style={styles.title}>{user.name}</Title>
+                                <Caption style={styles.caption}>{user.email}</Caption>
                             </View>
-                            <TouchableOpacity
-                                onPress={onReloadDrawer}
-                                style={styles.reloadIcon}
-                            >
-                                {/* <Icon name='md-reload-circle' size={15} /> */}
-                            </TouchableOpacity>
                         </View>
 
                         <View style={styles.row}>
                             <View style={styles.section}>
-                                <Paragraph style={[styles.paragraph, styles.caption]}>{data.pets}</Paragraph>
+                                <Paragraph style={[styles.paragraph, styles.caption]}>{pets.length}</Paragraph>
                                 <Caption style={styles.caption}>Pets</Caption>
                             </View>
-                            <View style={styles.section}>
+                            {/* <View style={styles.section}>
                                 <Paragraph style={[styles.paragraph, styles.caption]}>{data.matches}</Paragraph>
                                 <Caption style={styles.caption}>Matches</Caption>
-                            </View>
+                            </View> */}
                         </View>
                     </View>
 

@@ -6,34 +6,28 @@
  * @flow
  */
 
-import React, { useEffect } from 'react';
-import { View, ActivityIndicator } from 'react-native';
-import {
-  NavigationContainer,
-  DefaultTheme as NavigationDefaultTheme,
-  DarkTheme as NavigationDarkTheme
-} from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-
-import {
-  Provider as PaperProvider,
-  DefaultTheme as PaperDefaultTheme,
-  DarkTheme as PaperDarkTheme
-} from 'react-native-paper';
-
-import { DrawerContent } from './screens/DrawerContent';
-
-import MainTabScreen from './screens/MainTabScreen';
-import SettingsScreen from './screens/SettingsScreen';
-
-import { AuthContext } from './components/context';
-
-import RootStackScreen from './screens/RootStackScreen';
-
 import AsyncStorage from '@react-native-community/async-storage';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { DarkTheme as NavigationDarkTheme, DefaultTheme as NavigationDefaultTheme, NavigationContainer } from '@react-navigation/native';
+import Axios from 'axios';
+import React, { useEffect } from 'react';
+import { ActivityIndicator, View } from 'react-native';
+import { DarkTheme as PaperDarkTheme, DefaultTheme as PaperDefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { AuthContext } from './src/components/context';
+import { DrawerContent } from './src/screens/DrawerContent';
+import MainTabScreen from './src/screens/MainTabScreen';
+import RootStackScreen from './src/screens/RootStackScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
+import { Provider } from 'react-redux';
+import store from './src/store';
 
-import axios from 'axios';
-axios.defaults.baseURL = 'https://pet-dating-server.herokuapp.com/api/';
+
+
+
+
+
+
+Axios.defaults.baseURL = 'https://pet-dating-server.herokuapp.com/api/';
 
 const Drawer = createDrawerNavigator();
 
@@ -114,7 +108,7 @@ const App = () => {
         console.log(e);
       }
       console.log('set auth', userToken)
-      axios.defaults.headers.common['Authorization'] = userToken;
+      Axios.defaults.headers.common['Authorization'] = userToken;
       dispatch({ type: 'LOGIN', token: userToken });
     },
     signOut: async () => {
@@ -145,7 +139,7 @@ const App = () => {
       console.log(userToken)
       if (userToken) {
         console.log('set auth')
-        axios.defaults.headers.common['Authorization'] = userToken;
+        Axios.defaults.headers.common['Authorization'] = userToken;
       }
       dispatch({ type: 'RETRIEVE_TOKEN', token: userToken });
     }, 1000);
@@ -160,21 +154,23 @@ const App = () => {
     );
   }
   return (
-    <PaperProvider theme={theme}>
-      <AuthContext.Provider value={authContext}>
-        <NavigationContainer theme={theme}>
-          {loginState.userToken !== null ? (
-            <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-              <Drawer.Screen name="HomeDrawer" component={MainTabScreen} />
-              <Drawer.Screen name="SettingsScreen" component={SettingsScreen} />
-            </Drawer.Navigator>
-          )
-            :
-            <RootStackScreen />
-          }
-        </NavigationContainer>
-      </AuthContext.Provider>
-    </PaperProvider>
+    <Provider store={store}>
+      <PaperProvider theme={theme}>
+        <AuthContext.Provider value={authContext}>
+          <NavigationContainer theme={theme}>
+            {loginState.userToken !== null ? (
+              <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
+                <Drawer.Screen name="HomeDrawer" component={MainTabScreen} />
+                <Drawer.Screen name="SettingsScreen" component={SettingsScreen} />
+              </Drawer.Navigator>
+            )
+              :
+              <RootStackScreen />
+            }
+          </NavigationContainer>
+        </AuthContext.Provider>
+      </PaperProvider>
+    </Provider>
   );
 }
 

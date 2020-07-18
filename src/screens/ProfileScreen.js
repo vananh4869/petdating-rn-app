@@ -11,50 +11,66 @@ import {
     TouchableOpacity,
 } from 'react-native';
 
-// import Icon from 'react-native-vector-icons/Ionicons';
-// import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
+import Feather from 'react-native-vector-icons/Feather';
+import { useSelector, useDispatch } from 'react-redux';
+import Axios from 'axios';
+import { saveUser } from '../actions/auth';
 
 const ProfileScreen = () => {
-    // React.useEffect(() => {
-    //     const unsubscribe = navigation.addListener('focus', () => {
-    //         console.log('open profile')
-    //     });
 
-    //     return unsubscribe;
-    // }, [navigation]);
-    // const [reload, setReload] = React.useState(true)
+    const user = useSelector(state => state.auth.user);
+    const pets = useSelector(state => state.auth.pets);
+    // const dispatch = useDispatch();
+
     // React.useEffect(() => {
-    //     console.log('open profile')
-    // }, [reload]);
+    //     console.log('profile')
+    //     const getUserInfo = async () => {
+    //         Axios.get('/users/currentUser')
+    //             .then(res => {
+    //                 console.log(res.data)
+    //                 dispatch(addUser(res.data[0]));
+    //             })
+    //             .catch(error => console.log(error))
+    //     }
+    //     getUserInfo()
+    // }, []);
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={styles.titleBar}>
+                    <TouchableOpacity
+                        onPress={() => { }}
+                    >
+                        <Feather name="more-vertical" size={24} color="#52575D" ></Feather>
+                    </TouchableOpacity>
+                </View>
                 <View style={{ alignSelf: "center" }}>
                     <View style={styles.profileImage}>
-                        <Image source={require("../assets/profile-pic.jpg")} style={styles.image} resizeMode="stretch"></Image>
+                        <Image source={require("../../assets/profile-pic.jpg")} style={styles.image} resizeMode="stretch"></Image>
                     </View>
                     <View style={styles.add}>
-                        {/* <Icon name="md-add" size={48} color="#DFD8C8" style={{ marginTop: 6, marginLeft: 2 }}></Icon> */}
+                        <Icon name="camera" size={48} color="#DFD8C8"></Icon>
                     </View>
                 </View>
 
                 <View style={styles.infoContainer}>
                     <View style={{ flexDirection: 'row' }}>
-                        <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>Julie</Text>
+                        <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{user.name}</Text>
                         {/* <TouchableOpacity>
                             <MaterialIcons name='account-edit' size={30} style={{ marginTop: 7 }}></MaterialIcons>
                         </TouchableOpacity> */}
                     </View>
 
-                    <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>email</Text>
-                    <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>phone</Text>
-                    <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>gender</Text>
-                    <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>birthday</Text>
+                    <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.email}</Text>
+                    <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.phone}</Text>
+                    <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.gender == 1 ? 'Male' : 'Female'}</Text>
+                    <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.birth_date}</Text>
                 </View>
 
                 <View style={styles.statsContainer}>
                     <View style={[styles.statsBox, { borderColor: "#DFD8C8", borderRightWidth: 1 }]}>
-                        <Text style={[styles.text, { fontSize: 24 }]}>483</Text>
+                        <Text style={[styles.text, { fontSize: 24 }]}>{pets.length}</Text>
                         <Text style={[styles.text, styles.subText]}>Pets</Text>
                     </View>
                     {/* <View style={[styles.statsBox, { borderColor: "#DFD8C8", borderLeftWidth: 1, borderRightWidth: 1 }]}>
@@ -70,22 +86,22 @@ const ProfileScreen = () => {
                 <View style={{ marginTop: 32 }}>
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                         <View style={styles.mediaImageContainer}>
-                            <Image source={require("../assets/media1.jpg")} style={styles.image} resizeMode="cover"></Image>
+                            <Image source={require("../../assets/media1.jpg")} style={styles.image} resizeMode="cover"></Image>
                         </View>
                         <View style={styles.mediaImageContainer}>
-                            <Image source={require("../assets/media2.jpg")} style={styles.image} resizeMode="cover"></Image>
+                            <Image source={require("../../assets/media2.jpg")} style={styles.image} resizeMode="cover"></Image>
                         </View>
                         <View style={styles.mediaImageContainer}>
-                            <Image source={require("../assets/media3.jpg")} style={styles.image} resizeMode="cover"></Image>
+                            <Image source={require("../../assets/media3.jpg")} style={styles.image} resizeMode="cover"></Image>
                         </View>
                         <View style={styles.mediaImageContainer}>
-                            <Image source={require("../assets/media3.jpg")} style={styles.image} resizeMode="cover"></Image>
+                            <Image source={require("../../assets/media3.jpg")} style={styles.image} resizeMode="cover"></Image>
                         </View>
                         <View style={styles.mediaImageContainer}>
-                            <Image source={require("../assets/media3.jpg")} style={styles.image} resizeMode="cover"></Image>
+                            <Image source={require("../../assets/media3.jpg")} style={styles.image} resizeMode="cover"></Image>
                         </View>
                         <View style={styles.mediaImageContainer}>
-                            <Image source={require("../assets/media3.jpg")} style={styles.image} resizeMode="cover"></Image>
+                            <Image source={require("../../assets/media3.jpg")} style={styles.image} resizeMode="cover"></Image>
                         </View>
                     </ScrollView>
                     <View style={styles.mediaCount}>
@@ -135,7 +151,7 @@ const styles = StyleSheet.create({
     },
     titleBar: {
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "flex-end",
         marginTop: 24,
         marginHorizontal: 16
     },
