@@ -46,10 +46,10 @@ const ProfileScreen = ({ navigation }) => {
         return (
             <TouchableOpacity
                 onPress={() => {
-                    navigation.navigate('ProfileStackScreen', {
+                    navigation.navigate('PetStackScreen', {
                         screen: 'PetProfileScreen',
                         params: {
-                            petInfo: item
+                            petId: item.id
                         }
                     })
                 }}
