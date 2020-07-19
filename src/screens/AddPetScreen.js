@@ -9,35 +9,38 @@ import {
     Button,
     Image,
     TouchableOpacity,
+    FlatList,
     TextInput,
+    Alert,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useSelector, useDispatch } from 'react-redux';
 import Axios from 'axios';
-import { updateUser } from '../actions/auth';
+import { saveUser, addPet } from '../actions/auth';
+import { RadioButton } from 'react-native-paper';
 import ImagePicker from 'react-native-image-picker';
 import mime from 'mime';
-import { RadioButton } from 'react-native-paper';
 
-const UserSettingScreen = ({ route, navigation }) => {
-    const { userInfo } = route.params;
+
+const AddPetScreen = ({ navigation }) => {
 
     const [data, setData] = useState({
-        name: userInfo.name,
-        gender: userInfo.gender,
-        birth_date: userInfo.birth_date,
-        phone: userInfo.phone,
-        avatar: userInfo.avatar
+        name: '',
+        gender: 1,
+        age: null,
+        weight: null,
+        avatar: '',
+        breed: null,
+        introduction: ''
     });
-    const [isChange, setIsChange] = useState(false);
     const [uploadImg, setUploadImg] = useState({
         img: null
     });
 
-    const [checked, setChecked] = React.useState(userInfo.gender === 1 ? 'Male' : 'Female');
+    const [checked, setChecked] = useState('Male');
 
 
     const dispatch = useDispatch();
@@ -55,10 +58,21 @@ const UserSettingScreen = ({ route, navigation }) => {
     //     getUserInfo()
     // }, []);
 
+    const resetData = () => {
+        setData({
+            name: '',
+            gender: 1,
+            age: null,
+            weight: null,
+            avatar: '',
+            breed: null,
+            introduction: ''
+        })
+    }
+
     const uploadImgToServer = async () => {
         try {
             const formData = new FormData()
-            console.log(uploadImg.img)
             formData.append('file', uploadImg.img)
             formData.append("upload_preset", "PetDating")
             formData.append("cloud_name", "anhtv4869")
@@ -77,37 +91,32 @@ const UserSettingScreen = ({ route, navigation }) => {
         }
     }
 
-    const onUpdateUser = async () => {
-
-        if (userInfo.avatar != data.avatar) {
-            const newAvatar = await uploadImgToServer();
-            console.log('start', newAvatar)
-            Axios.put('/users', {
-                updateFields: {
-                    ...data,
-                    avatar: newAvatar
-                }
-            })
-                .then(res => {
-                    console.log('cc:', res.data)
-                    dispatch(updateUser(data))
-                    setIsChange(false)
-                })
-                .catch(error => console.error(error));
-        } else {
-            Axios.put('/users', {
-                updateFields: {
-                    ...data
-                }
-            })
-                .then(res => {
-                    console.log(res.data)
-                    dispatch(updateUser(data))
-                    setIsChange(false)
-                })
-                .catch(error => console.error(error));
+    const validatePet = () => {
+        if (!data.avatar) {
+            Alert.alert('Error', 'Avatar can not be empty')
+            return false;
         }
+        if (!data.name) {
+            Alert.alert('Error', 'Name can not be empty')
+            return false;
+        }
+        return true;
+    }
+
+    const onAddPet = async () => {
+        if (!validatePet()) return;
+
+        const newAvatar = await uploadImgToServer();
+        console.log(data)
+        setData({ ...data, avatar: newAvatar });
+        Axios.post('/pets', data)
+            .then(res => {
+                console.log(res.data)
+                dispatch(addPet(data))
+            })
+            .catch(error => console.error(error));
         navigation.navigate('Profile')
+        resetData();
     }
 
     const handleInfo = (field, value) => {
@@ -115,7 +124,7 @@ const UserSettingScreen = ({ route, navigation }) => {
             ...data,
             [field]: value
         });
-        setIsChange(userInfo[field] != value);
+        // console.log(userInfo[field], value)
     }
 
     const handleUploadPicture = () => {
@@ -140,7 +149,6 @@ const UserSettingScreen = ({ route, navigation }) => {
                 }
                 setUploadImg({ img: img });
                 setData({ ...data, avatar: img.uri })
-                setIsChange(true)
             }
         });
     }
@@ -150,15 +158,13 @@ const UserSettingScreen = ({ route, navigation }) => {
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.titleBar}>
                     <TouchableOpacity
-                        onPress={() => { navigation.navigate('Profile') }}
+                        onPress={() => {
+                            navigation.navigate('Profile')
+                            resetData()
+                        }}
                     >
                         <Icon name="arrow-back" size={24} color="#52575D" ></Icon>
                     </TouchableOpacity>
-                    {isChange && <TouchableOpacity
-                        onPress={onUpdateUser}
-                    >
-                        <Icon name="checkmark-done" size={24} color="#52575D" ></Icon>
-                    </TouchableOpacity>}
                 </View>
                 <View style={{ alignSelf: "center" }}>
                     <View style={styles.profileImage}>
@@ -175,7 +181,6 @@ const UserSettingScreen = ({ route, navigation }) => {
                     <View style={styles.userInfo}>
                         <Text style={styles.textInputTitle}>Name</Text>
                         <TextInput
-                            placeholder='Name'
                             value={data.name}
                             onChangeText={txt => handleInfo('name', txt)}
                             style={styles.textInput}
@@ -208,27 +213,38 @@ const UserSettingScreen = ({ route, navigation }) => {
                         </View>
                     </View>
                     <View style={styles.userInfo}>
-                        <Text style={styles.textInputTitle}>Phone</Text>
+                        <Text style={styles.textInputTitle}>Age</Text>
                         <TextInput
-                            placeholder='Phone'
                             keyboardType="numeric"
-                            value={data.phone}
-                            onChangeText={txt => handleInfo('phone', txt)}
+                            value={data.age}
+                            onChangeText={txt => handleInfo('age', txt)}
                             style={styles.textInput}
                         />
                     </View>
                     <View style={styles.userInfo}>
-                        <Text style={styles.textInputTitle}>Birthday</Text>
+                        <Text style={styles.textInputTitle}>Weight</Text>
                         <TextInput
-                            placeholder='YYYY-MM-DD'
-                            value={data.birth_date}
-                            onChangeText={txt => handleInfo('birth_date', txt)}
+                            keyboardType="numeric"
+                            value={data.weight}
+                            onChangeText={txt => handleInfo('weight', txt)}
                             style={styles.textInput}
                         />
                     </View>
-
+                    <View style={[styles.userInfo, { paddingBottom: 30 }]}>
+                        <Text style={styles.textInputTitle}>Introduction</Text>
+                        <TextInput
+                            placeholder='something about your pet ...'
+                            value={data.introduction}
+                            onChangeText={txt => handleInfo('introduction', txt)}
+                            style={styles.textInput}
+                        />
+                    </View>
+                    <Button
+                        title='Add Pet'
+                        onPress={onAddPet}
+                    // style={{ marginBottom: -50 }}
+                    ></Button>
                 </View>
-
             </ScrollView>
         </SafeAreaView>
     )
@@ -271,7 +287,7 @@ const styles = StyleSheet.create({
     },
     userInfo: {
         flexDirection: 'column',
-        paddingTop: 10
+        paddingTop: 20
     },
     userContainer: {
         flex: 1,
@@ -311,4 +327,4 @@ const styles = StyleSheet.create({
         marginTop: 10
     }
 });
-export default UserSettingScreen;
+export default AddPetScreen;

@@ -25,7 +25,7 @@ const authReducer = (state = initialState, action) => {
             }
         case ADD_PET:
             const newPets = [...state.pets];
-            newPets.push(action.pet);
+            newPets.unshift(action.pet);
             return {
                 ...state,
                 pets: newPets

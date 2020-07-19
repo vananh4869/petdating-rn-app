@@ -103,7 +103,7 @@ const ProfileScreen = ({ navigation }) => {
                     </View>
                 </View>
 
-                <View style={{ marginTop: 32 }}>
+                <View style={{ marginTop: 32, minHeight: 100 }}>
                     <FlatList
                         horizontal={true}
                         data={pets}
@@ -112,7 +112,7 @@ const ProfileScreen = ({ navigation }) => {
                         refreshing={true}
                     />
                     <View style={styles.mediaCount}>
-                        <TouchableOpacity onPress={() => { navigation.navigate('AddPetScreen') }}>
+                        <TouchableOpacity onPress={() => { navigation.navigate('ProfileStackScreen', { screen: 'AddPetScreen' }) }}>
                             <Icon name="add" size={50} color="#fff" ></Icon>
                         </TouchableOpacity>
                     </View>
