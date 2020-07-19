@@ -14,7 +14,16 @@ import PetProfileScreen from './PetProfileScreen';
 
 const ProfileStack = createStackNavigator();
 const ProfileStackScreen = ({ navigation }) => (
-    <ProfileStack.Navigator headerMode='none'>
+    <ProfileStack.Navigator screenOptions={{
+        headerStyle: {
+            backgroundColor: '#009387'
+        },
+        headerTitleAlign: 'center',
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold'
+        }
+    }} >
         <ProfileStack.Screen name="UserSetting" component={UserSettingScreen} />
         <ProfileStack.Screen name="PetProfileScreen" component={PetProfileScreen} />
     </ProfileStack.Navigator >

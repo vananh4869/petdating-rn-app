@@ -49,7 +49,7 @@ const ProfileScreen = ({ navigation }) => {
                     navigation.navigate('ProfileStackScreen', {
                         screen: 'PetProfileScreen',
                         params: {
-                            userInfo: user
+                            petInfo: item
                         }
                     })
                 }}
@@ -90,9 +90,6 @@ const ProfileScreen = ({ navigation }) => {
                     </View>
 
                     <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.email}</Text>
-                    {user.phone && <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.phone}</Text>}
-                    {user.gender && <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.gender == 1 ? 'Male' : 'Female'}</Text>}
-                    {user.birth_date && <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>{user.birth_date}</Text>}
                 </View>
 
                 <View style={styles.statsContainer}>
@@ -107,7 +104,6 @@ const ProfileScreen = ({ navigation }) => {
                 </View>
 
                 <View style={{ marginTop: 32 }}>
-                    <View style={{ width: 100 }}></View>
                     <FlatList
                         horizontal={true}
                         data={pets}
@@ -120,26 +116,29 @@ const ProfileScreen = ({ navigation }) => {
                             <Icon name="add" size={50} color="#fff" ></Icon>
                         </TouchableOpacity>
                     </View>
-                </View>
-                <Text style={[styles.subText, styles.recent]}>Recent Activity</Text>
-                <View style={{ alignItems: "center" }}>
-                    <View style={styles.recentItem}>
-                        <View style={styles.activityIndicator}></View>
-                        <View style={{ width: 250 }}>
-                            <Text style={[styles.text, { color: "#41444B", fontWeight: "300" }]}>
-                                Started following <Text style={{ fontWeight: "400" }}>Jake Challeahe</Text> and <Text style={{ fontWeight: "400" }}>Luis Poteer</Text>
-                            </Text>
-                        </View>
-                    </View>
 
-                    <View style={styles.recentItem}>
-                        <View style={styles.activityIndicator}></View>
-                        <View style={{ width: 250 }}>
-                            <Text style={[styles.text, { color: "#41444B", fontWeight: "300" }]}>
-                                Started following <Text style={{ fontWeight: "400" }}>Luke Harper</Text>
-                            </Text>
+                </View>
+                <Text style={[styles.subText, styles.recent]}>More Information</Text>
+                <View style={{ alignItems: "center", marginLeft: 50 }}>
+                    {user.phone &&
+                        <View style={styles.recentItem}>
+                            <Text style={{ flex: 1, color: "#AEB5BC" }}>Phone:</Text>
+                            <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14, flex: 3 }]}>{user.phone}</Text>
                         </View>
-                    </View>
+                    }
+                    {user.birth_date &&
+                        <View style={styles.recentItem}>
+                            <Text style={{ flex: 1, color: "#AEB5BC" }}>Birthday:</Text>
+                            <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14, flex: 3 }]}>{user.birth_date}</Text>
+                        </View>
+                    }
+                    {user.gender !== null &&
+                        <View style={styles.recentItem}>
+                            <Text style={{ flex: 1, color: "#AEB5BC" }}>Gender:</Text>
+                            <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14, flex: 3 }]}>{user.gender === 1 ? 'Male' : 'Female'}</Text>
+                        </View>
+                    }
+
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -235,10 +234,10 @@ const styles = StyleSheet.create({
     mediaCount: {
         backgroundColor: "#41444B",
         position: "absolute",
-        top: '25%',
+        top: 0,
         left: 10,
-        width: 90,
-        height: 100,
+        width: 50,
+        height: 50,
         alignItems: "center",
         justifyContent: "center",
         borderRadius: 12,
@@ -248,21 +247,22 @@ const styles = StyleSheet.create({
         shadowOpacity: 1
     },
     recent: {
-        marginLeft: 78,
+        marginLeft: 50,
         marginTop: 32,
         marginBottom: 6,
-        fontSize: 10
+        paddingBottom: 10,
+        fontSize: 16
     },
     recentItem: {
         flexDirection: "row",
-        alignItems: "flex-start",
-        marginBottom: 16
+        marginBottom: 10,
+        flex: 1
     },
     activityIndicator: {
-        backgroundColor: "#CABFAB",
+        // backgroundColor: "#CABFAB",
         padding: 4,
-        height: 12,
-        width: 12,
+        // height: 12,
+        // width: 12,
         borderRadius: 6,
         marginTop: 3,
         marginRight: 20

@@ -20,9 +20,9 @@ import Axios from 'axios';
 import { updateUser } from '../actions/auth';
 import ImagePicker from 'react-native-image-picker';
 import mime from 'mime';
+import { RadioButton } from 'react-native-paper';
 
 const UserSettingScreen = ({ route, navigation }) => {
-    const user = useSelector(state => state.auth.user);
     const { userInfo } = route.params;
 
     const [data, setData] = useState({
@@ -33,6 +33,11 @@ const UserSettingScreen = ({ route, navigation }) => {
         avatar: userInfo.avatar
     });
     const [isChange, setIsChange] = useState(false);
+    const [uploadImg, setUploadImg] = useState({
+        img: null
+    });
+
+    const [checked, setChecked] = React.useState(userInfo.gender === 1 ? 'Male' : 'Female');
 
 
     const dispatch = useDispatch();
@@ -50,19 +55,56 @@ const UserSettingScreen = ({ route, navigation }) => {
     //     getUserInfo()
     // }, []);
 
-    const onUpdateUser = () => {
-        console.log(data)
-        Axios.put('/users', {
-            updateFields: {
-                ...data
-            }
-        })
-            .then(res => {
-                console.log(res.data)
-                dispatch(updateUser(data))
-                setIsChange(false)
+    const uploadImgToServer = async () => {
+        try {
+            const formData = new FormData()
+            formData.append('file', uploadImg.img)
+            formData.append("upload_preset", "PetDating")
+            formData.append("cloud_name", "anhtv4869")
+            const response = await fetch('https://api.cloudinary.com/v1_1/anhtv4869/image/upload', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            const res = await response.json();
+            return res.url;
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const onUpdateUser = async () => {
+
+        if (userInfo.avatar != data.avatar) {
+            const newAvatar = await uploadImgToServer();
+            Axios.put('/users', {
+                updateFields: {
+                    ...data,
+                    avatar: newAvatar
+                }
             })
-            .catch(error => console.error(error));
+                .then(res => {
+                    console.log(res.data)
+                    dispatch(updateUser(data))
+                    setIsChange(false)
+                })
+                .catch(error => console.error(error));
+        } else {
+            Axios.put('/users', {
+                updateFields: {
+                    ...data
+                }
+            })
+                .then(res => {
+                    console.log(res.data)
+                    dispatch(updateUser(data))
+                    setIsChange(false)
+                })
+                .catch(error => console.error(error));
+        }
         navigation.navigate('Profile')
     }
 
@@ -72,6 +114,7 @@ const UserSettingScreen = ({ route, navigation }) => {
             [field]: value
         });
         setIsChange(userInfo[field] != value);
+        console.log(userInfo[field], value)
     }
 
     const handleUploadPicture = () => {
@@ -94,30 +137,9 @@ const UserSettingScreen = ({ route, navigation }) => {
                         response.fileName ||
                         response.uri.substr(response.uri.lastIndexOf('/') + 1)
                 }
-                const formData = new FormData()
-                formData.append('file', img)
-                formData.append("upload_preset", "PetDating")
-                formData.append("cloud_name", "anhtv4869")
-                fetch('https://api.cloudinary.com/v1_1/anhtv4869/image/upload', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-                    .then(res => res.json())
-                    .then(res => {
-                        // setInfo({ avatar: data.url })
-                        setData({
-                            ...data,
-                            avatar: res.url
-                        })
-                        setIsChange(true)
-                        console.log('Hello:', res)
-                    }).catch(e => {
-                        console.error(e)
-                    })
+                setUploadImg({ img: img });
+                setData({ ...data, avatar: img.uri })
+                setIsChange(true)
             }
         });
     }
@@ -150,7 +172,7 @@ const UserSettingScreen = ({ route, navigation }) => {
 
                 <View style={styles.userContainer}>
                     <View style={styles.userInfo}>
-                        <Feather name='user' style={styles.icon} size={20} />
+                        <Text style={styles.textInputTitle}>Name</Text>
                         <TextInput
                             placeholder='Name'
                             value={data.name}
@@ -158,17 +180,34 @@ const UserSettingScreen = ({ route, navigation }) => {
                             style={styles.textInput}
                         />
                     </View>
-                    {/* <View style={styles.userInfo}>
-                        <Feather name='user' />
-                        <TextInput
-                            placeholder='Gender'
-                            value={data.gender}
-                            onChangeText={txt => handleInfo('gender', txt)}
-                            style={styles.textInput}
-                        />
-                    </View> */}
                     <View style={styles.userInfo}>
-                        <Feather name='phone' style={styles.icon} size={20} />
+                        <Text style={styles.textInputTitle}>Gender</Text>
+                        <View style={styles.radioContaier}>
+                            <View style={styles.radioBtn}>
+                                <RadioButton
+                                    value="Male"
+                                    status={checked === 'Male' ? 'checked' : 'unchecked'}
+                                    onPress={() => {
+                                        setChecked('Male');
+                                        handleInfo('gender', 1);
+                                    }}
+                                />
+                                <Text style={styles.radioText}>Male</Text>
+                            </View>
+                            <View style={styles.radioBtn}>
+                                <RadioButton
+                                    value="Female"
+                                    status={checked === 'Female' ? 'checked' : 'unchecked'}
+                                    onPress={() => {
+                                        setChecked('Female');
+                                        handleInfo('gender', 0);
+                                    }}
+                                /><Text style={styles.radioText}>Female</Text>
+                            </View>
+                        </View>
+                    </View>
+                    <View style={styles.userInfo}>
+                        <Text style={styles.textInputTitle}>Phone</Text>
                         <TextInput
                             placeholder='Phone'
                             keyboardType="numeric"
@@ -178,9 +217,9 @@ const UserSettingScreen = ({ route, navigation }) => {
                         />
                     </View>
                     <View style={styles.userInfo}>
-                        <FontAwesome name='birthday-cake' style={styles.icon} size={20} />
+                        <Text style={styles.textInputTitle}>Birthday</Text>
                         <TextInput
-                            placeholder='Birth date'
+                            placeholder='YYYY-MM-DD'
                             value={data.birth_date}
                             onChangeText={txt => handleInfo('birth_date', txt)}
                             style={styles.textInput}
@@ -228,26 +267,45 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     userInfo: {
-        flexDirection: 'row',
+        flexDirection: 'column',
+        paddingTop: 10
     },
     userContainer: {
         flex: 1,
         flexDirection: 'column',
         padding: 30,
     },
+    textInputTitle: {
+        color: '#AEB5BC',
+        fontSize: 12,
+    },
     textInput: {
-        flex: 9,
+        // flex: 9,
         // marginBottom: 5,
         fontFamily: "HelveticaNeue",
         color: "#52575D",
         borderBottomWidth: 1,
-        borderBottomColor: 'lightgray'
+        borderBottomColor: '#AEB5BC',
+        padding: 0,
+        height: 30
     },
     icon: {
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
         paddingTop: 15,
+    },
+    radioContaier: {
+        flexDirection: 'row',
+        alignContent: 'space-between',
+        flex: 1
+    },
+    radioBtn: {
+        flex: 1,
+        flexDirection: 'row'
+    },
+    radioText: {
+        marginTop: 10
     }
 });
 export default UserSettingScreen;
