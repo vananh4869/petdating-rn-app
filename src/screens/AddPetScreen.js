@@ -156,17 +156,7 @@ const AddPetScreen = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.titleBar}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            navigation.navigate('Profile')
-                            resetData()
-                        }}
-                    >
-                        <Icon name="arrow-back" size={24} color="#52575D" ></Icon>
-                    </TouchableOpacity>
-                </View>
-                <View style={{ alignSelf: "center" }}>
+                <View style={{ alignSelf: "center", paddingTop: 20 }}>
                     <View style={styles.profileImage}>
                         <Image source={data.avatar ? { uri: data.avatar } : require('../../assets/avatar.jpg')} style={styles.image} resizeMode="cover"></Image>
                     </View>
@@ -239,11 +229,25 @@ const AddPetScreen = ({ navigation }) => {
                             style={styles.textInput}
                         />
                     </View>
-                    <Button
-                        title='Add Pet'
-                        onPress={onAddPet}
-                    // style={{ marginBottom: -50 }}
-                    ></Button>
+                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                navigation.navigate('Profile')
+                                resetData()
+                            }}
+                            style={[styles.btn, { backgroundColor: '#fff', paddingRight: 5 }]}
+                        >
+                            <Text>Cancel</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={onAddPet}
+                            style={[styles.btn, { backgroundColor: '#05a98b', paddingRight: 5 }]}
+                        >
+                            <Text style={{ color: '#fff' }}>ADD</Text>
+                        </TouchableOpacity>
+
+                    </View>
+
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -264,7 +268,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         marginTop: 24,
-        marginHorizontal: 16
+        marginHorizontal: 16,
     },
     profileImage: {
         width: 200,
@@ -325,6 +329,14 @@ const styles = StyleSheet.create({
     },
     radioText: {
         marginTop: 10
+    },
+    btn: {
+        width: '100%',
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        flex: 1,
     }
 });
 export default AddPetScreen;

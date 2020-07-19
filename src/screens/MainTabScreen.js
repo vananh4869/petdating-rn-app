@@ -18,6 +18,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Axios from 'axios';
 import { saveUser, savePets } from '../actions/auth';
 import UserSettingScreen from './UserSettingScreen';
+import ProfileStackScreen from './ProfileStackScreen';
 
 
 
@@ -34,7 +35,7 @@ const HomeStackScreen = ({ navigation }) => (
         headerTitleAlign: 'center',
         headerTintColor: '#fff',
         headerTitleStyle: {
-            fontWeight: 'bold'
+            // fontWeight: 'bold'
         }
     }}>
         <HomeStack.Screen name="Home" component={HomeScreen}
@@ -56,7 +57,7 @@ const ChatStackScreen = ({ navigation }) => (
         headerTitleAlign: 'center',
         headerTintColor: '#fff',
         headerTitleStyle: {
-            fontWeight: 'bold'
+            // fontWeight: 'bold'
         }
     }}>
         <ChatStack.Screen name="Chat" component={ChatScreen} options={{
@@ -68,6 +69,8 @@ const ChatStackScreen = ({ navigation }) => (
         }} />
     </ChatStack.Navigator>
 )
+
+
 
 
 const Tab = createMaterialBottomTabNavigator();
@@ -121,8 +124,8 @@ const MainTabScreen = () => {
                 }}
             />
             <Tab.Screen
-                name="Profile"
-                component={ProfileScreen}
+                name="ProfileStack"
+                component={ProfileStackScreen}
                 options={{
                     tabBarLabel: 'Profile',
                     tabBarColor: '#694fad',

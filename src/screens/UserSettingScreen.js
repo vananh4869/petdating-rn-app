@@ -107,7 +107,7 @@ const UserSettingScreen = ({ route, navigation }) => {
                 })
                 .catch(error => console.error(error));
         }
-        navigation.navigate('Profile')
+        navigation.goBack();
     }
 
     const handleInfo = (field, value) => {
@@ -149,18 +149,9 @@ const UserSettingScreen = ({ route, navigation }) => {
         <SafeAreaView style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.titleBar}>
-                    <TouchableOpacity
-                        onPress={() => { navigation.navigate('Profile') }}
-                    >
-                        <Icon name="arrow-back" size={24} color="#52575D" ></Icon>
-                    </TouchableOpacity>
-                    {isChange && <TouchableOpacity
-                        onPress={onUpdateUser}
-                    >
-                        <Icon name="checkmark-done" size={24} color="#52575D" ></Icon>
-                    </TouchableOpacity>}
+
                 </View>
-                <View style={{ alignSelf: "center" }}>
+                <View style={{ alignSelf: "center", paddingTop: 20 }}>
                     <View style={styles.profileImage}>
                         <Image source={data.avatar ? { uri: data.avatar } : require('../../assets/avatar.jpg')} style={styles.image} resizeMode="cover"></Image>
                     </View>
@@ -226,6 +217,14 @@ const UserSettingScreen = ({ route, navigation }) => {
                             style={styles.textInput}
                         />
                     </View>
+                    {isChange &&
+                        <View style={styles.userInfo}>
+                            <Button
+                                onPress={onUpdateUser}
+                                title='Save'
+                            />
+                        </View>
+                    }
 
                 </View>
 
@@ -237,7 +236,7 @@ const UserSettingScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#FFF"
+        backgroundColor: "#FFF",
     },
     image: {
         flex: 1,
@@ -245,10 +244,13 @@ const styles = StyleSheet.create({
         width: 200
     },
     titleBar: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginTop: 24,
-        marginHorizontal: 16
+        // flexDirection: "row",
+        // justifyContent: "flex-end",
+        // marginTop: 24,
+        // marginHorizontal: 16
+        position: 'absolute',
+        right: 10,
+
     },
     profileImage: {
         width: 200,

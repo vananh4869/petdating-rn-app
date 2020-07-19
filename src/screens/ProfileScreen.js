@@ -64,21 +64,7 @@ const ProfileScreen = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.titleBar}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            navigation.navigate('ProfileStackScreen', {
-                                screen: 'UserSetting',
-                                params: {
-                                    userInfo: user
-                                }
-                            })
-                        }}
-                    >
-                        <MaterialCommunityIcons name="account-edit-outline" size={24} color="#52575D" ></MaterialCommunityIcons>
-                    </TouchableOpacity>
-                </View>
-                <View style={{ alignSelf: "center" }}>
+                <View style={{ alignSelf: "center", paddingTop: 20 }}>
                     <View style={styles.profileImage}>
                         <Image source={user.avatar ? { uri: user.avatar } : require('../../assets/avatar.jpg')} style={styles.image} resizeMode="cover"></Image>
                     </View>
@@ -112,7 +98,7 @@ const ProfileScreen = ({ navigation }) => {
                         refreshing={true}
                     />
                     <View style={styles.mediaCount}>
-                        <TouchableOpacity onPress={() => { navigation.navigate('ProfileStackScreen', { screen: 'AddPetScreen' }) }}>
+                        <TouchableOpacity onPress={() => { navigation.navigate('PetStackScreen', { screen: 'AddPetScreen' }) }}>
                             <Icon name="add" size={50} color="#fff" ></Icon>
                         </TouchableOpacity>
                     </View>
@@ -177,7 +163,7 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         overflow: "hidden",
         borderWidth: 4,
-        borderColor: '#FF1'
+        borderColor: '#FF1',
     },
     dm: {
         backgroundColor: "#41444B",
