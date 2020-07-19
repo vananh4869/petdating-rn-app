@@ -10,11 +10,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import Axios from 'axios';
 import { saveUser, savePets } from '../actions/auth';
 import UserSettingScreen from './UserSettingScreen';
+import PetProfileScreen from './PetProfileScreen';
 
 const ProfileStack = createStackNavigator();
 const ProfileStackScreen = ({ navigation }) => (
     <ProfileStack.Navigator headerMode='none'>
         <ProfileStack.Screen name="UserSetting" component={UserSettingScreen} />
+        <ProfileStack.Screen name="PetProfileScreen" component={PetProfileScreen} />
     </ProfileStack.Navigator >
 )
 export default ProfileStackScreen;

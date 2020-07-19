@@ -60,6 +60,7 @@ const UserSettingScreen = ({ route, navigation }) => {
             .then(res => {
                 console.log(res.data)
                 dispatch(updateUser(data))
+                setIsChange(false)
             })
             .catch(error => console.error(error));
         navigation.navigate('Profile')
@@ -93,26 +94,27 @@ const UserSettingScreen = ({ route, navigation }) => {
                         response.fileName ||
                         response.uri.substr(response.uri.lastIndexOf('/') + 1)
                 }
-                const data = new FormData()
-                data.append('file', img)
-                data.append("upload_preset", "PetDating")
-                data.append("cloud_name", "anhtv4869")
+                const formData = new FormData()
+                formData.append('file', img)
+                formData.append("upload_preset", "PetDating")
+                formData.append("cloud_name", "anhtv4869")
                 fetch('https://api.cloudinary.com/v1_1/anhtv4869/image/upload', {
                     method: 'POST',
-                    body: data,
+                    body: formData,
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'multipart/form-data'
                     }
                 })
-                    // .then(res => res.json())
+                    .then(res => res.json())
                     .then(res => {
                         // setInfo({ avatar: data.url })
                         setData({
                             ...data,
                             avatar: res.url
                         })
-                        console.log(res)
+                        setIsChange(true)
+                        console.log('Hello:', res)
                     }).catch(e => {
                         console.error(e)
                     })
@@ -137,7 +139,7 @@ const UserSettingScreen = ({ route, navigation }) => {
                 </View>
                 <View style={{ alignSelf: "center" }}>
                     <View style={styles.profileImage}>
-                        <Image source={user.avatar ? { uri: data.avatar } : require('../../assets/avatar.jpg')} style={styles.image} resizeMode="cover"></Image>
+                        <Image source={data.avatar ? { uri: data.avatar } : require('../../assets/avatar.jpg')} style={styles.image} resizeMode="cover"></Image>
                     </View>
                     <View style={styles.add}>
                         <TouchableOpacity onPress={handleUploadPicture}>

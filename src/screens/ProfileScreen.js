@@ -9,6 +9,7 @@ import {
     Button,
     Image,
     TouchableOpacity,
+    FlatList,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -40,6 +41,25 @@ const ProfileScreen = ({ navigation }) => {
     // const onAddPet = () => {
 
     // }
+
+    const renderList = ({ item }) => {
+        return (
+            <TouchableOpacity
+                onPress={() => {
+                    navigation.navigate('ProfileStackScreen', {
+                        screen: 'PetProfileScreen',
+                        params: {
+                            userInfo: user
+                        }
+                    })
+                }}
+            >
+                <View style={styles.mediaImageContainer}>
+                    <Image source={item.avatar ? { uri: item.avatar } : require('../../assets/avatar.jpg')} style={styles.image} resizeMode="cover" />
+
+                </View ></TouchableOpacity>
+        )
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -87,27 +107,14 @@ const ProfileScreen = ({ navigation }) => {
                 </View>
 
                 <View style={{ marginTop: 32 }}>
-                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                        <View style={{ width: 100 }}></View>
-                        <View style={styles.mediaImageContainer}>
-                            <Image source={require("../../assets/media1.jpg")} style={styles.image} resizeMode="cover"></Image>
-                        </View>
-                        <View style={styles.mediaImageContainer}>
-                            <Image source={require("../../assets/media2.jpg")} style={styles.image} resizeMode="cover"></Image>
-                        </View>
-                        <View style={styles.mediaImageContainer}>
-                            <Image source={require("../../assets/media3.jpg")} style={styles.image} resizeMode="cover"></Image>
-                        </View>
-                        <View style={styles.mediaImageContainer}>
-                            <Image source={require("../../assets/media3.jpg")} style={styles.image} resizeMode="cover"></Image>
-                        </View>
-                        <View style={styles.mediaImageContainer}>
-                            <Image source={require("../../assets/media3.jpg")} style={styles.image} resizeMode="cover"></Image>
-                        </View>
-                        <View style={styles.mediaImageContainer}>
-                            <Image source={require("../../assets/media3.jpg")} style={styles.image} resizeMode="cover"></Image>
-                        </View>
-                    </ScrollView>
+                    <View style={{ width: 100 }}></View>
+                    <FlatList
+                        horizontal={true}
+                        data={pets}
+                        renderItem={renderList}
+                        keyExtractor={item => `${item.id}`}
+                        refreshing={true}
+                    />
                     <View style={styles.mediaCount}>
                         <TouchableOpacity onPress={() => { navigation.navigate('AddPetScreen') }}>
                             <Icon name="add" size={50} color="#fff" ></Icon>
