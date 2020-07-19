@@ -8,7 +8,7 @@
 
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import React, { useState } from 'react';
+import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ChatScreen from './ChatScreen';
 import ExploreScreen from './ExploreScreen';
@@ -17,7 +17,7 @@ import ProfileScreen from './ProfileScreen';
 import { useSelector, useDispatch } from 'react-redux';
 import Axios from 'axios';
 import { saveUser, savePets } from '../actions/auth';
-import { ActivityIndicator, View } from 'react-native';
+import UserSettingScreen from './UserSettingScreen';
 
 
 
@@ -31,8 +31,8 @@ const HomeStackScreen = ({ navigation }) => (
         headerStyle: {
             backgroundColor: '#009387'
         },
-        headerTintColor: '#fff',
         headerTitleAlign: 'center',
+        headerTintColor: '#fff',
         headerTitleStyle: {
             fontWeight: 'bold'
         }
@@ -78,8 +78,6 @@ const MainTabScreen = () => {
     // const pets = useSelector(state => state.auth.pets);
     const dispatch = useDispatch();
 
-    const [loading, setLoading] = useState(true)
-
     React.useEffect(() => {
         console.log('get user info')
         const getUserInfo = async () => {
@@ -87,7 +85,6 @@ const MainTabScreen = () => {
                 .then(res => {
                     console.log(res.data)
                     dispatch(saveUser(res.data[0]));
-                    setLoading(false)
                 })
                 .catch(error => console.log(error))
         }
@@ -101,21 +98,11 @@ const MainTabScreen = () => {
                 .then(res => {
                     console.log(res.data)
                     dispatch(savePets(res.data));
-                    setLoading(false)
                 })
                 .catch(error => console.log(error))
         }
         getPetsInfo()
     }, []);
-
-    if (loading) {
-        console.log('loading')
-        return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" />
-            </View>
-        )
-    }
 
     return (
         <Tab.Navigator
