@@ -111,8 +111,8 @@ const AddPetScreen = ({ navigation }) => {
         setData({ ...data, avatar: newAvatar });
         Axios.post('/pets', data)
             .then(res => {
-                console.log(res.data)
-                dispatch(addPet(data))
+                console.log('AAAA', res.data)
+                dispatch(addPet(res.data.data))
             })
             .catch(error => console.error(error));
         navigation.navigate('Profile')
