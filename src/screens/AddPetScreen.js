@@ -108,8 +108,8 @@ const AddPetScreen = ({ navigation }) => {
 
         const newAvatar = await uploadImgToServer();
         console.log(data)
-        setData({ ...data, avatar: newAvatar });
-        Axios.post('/pets', data)
+        // setData({ ...data, avatar: newAvatar });
+        Axios.post('/pets', { ...data, avatar: newAvatar })
             .then(res => {
                 console.log('AAAA', res.data)
                 dispatch(addPet(res.data.data))
