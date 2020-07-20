@@ -1,17 +1,15 @@
 import Axios from 'axios';
-import mime from 'mime';
 import React, { useState } from 'react';
 import {
     Image, SafeAreaView,
     ScrollView, StyleSheet,
-    TextInput, TouchableOpacity, View, Text
+    TextInput, TouchableOpacity, View, Text, Alert
 } from 'react-native';
-import ImagePicker from 'react-native-image-picker';
-import Feather from 'react-native-vector-icons/Feather';
+import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { useSelector } from 'react-redux';
-import { updateUser } from '../actions/auth';
+import Feather from 'react-native-vector-icons/Feather';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateUser, deletePet } from '../actions/auth';
 
 
 
@@ -22,10 +20,10 @@ const PetProfileScreen = ({ route, navigation }) => {
     // const [isChange, setIsChange] = useState(false);
 
 
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
     React.useEffect(() => {
-        console.log('PET INFO')
+        console.log('PET INFO', petId)
         const getPetInfo = async () => {
             Axios.get(`/pets/${petId}`)
                 .then(res => {
@@ -117,9 +115,52 @@ const PetProfileScreen = ({ route, navigation }) => {
     //     });
     // }
 
+    const _delete = () => {
+        Axios.delete(`/pets/${petId}`)
+            .then(res => {
+                console.log(petId)
+                dispatch(deletePet(petId));
+                navigation.navigate('Profile')
+            }).catch(e => console.error(e))
+    }
+
+    const onDeletePet = () => {
+        Alert.alert(
+            `Delete ${data.name}?`,
+            `Are you sure to delete ${data.name}?`,
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('User cancel delete!'),
+                    style: 'cancel'
+                },
+                {
+                    text: 'OK',
+                    onPress: _delete
+                }
+            ],
+            { cancelable: false }
+        )
+    }
+
+    const onEditPet = () => {
+
+    }
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
+                <View style={styles.titleBar}>
+                    <TouchableOpacity
+                        onPress={onDeletePet}
+                    >
+                        <Entypo name='trash' size={30} color='#ff0000' />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={onEditPet}
+                    >
+                        <Feather name='edit' size={30} />
+                    </TouchableOpacity>
+                </View>
                 <View style={{ alignSelf: "center", paddingTop: 20 }}>
                     <View style={styles.profileImage}>
                         <Image source={data.avatar ? { uri: data.avatar } : require('../../assets/avatar.jpg')} style={styles.image} resizeMode="cover"></Image>
@@ -180,9 +221,9 @@ const styles = StyleSheet.create({
     },
     titleBar: {
         flexDirection: "row",
-        justifyContent: "flex-end",
-        marginTop: 24,
-        marginHorizontal: 16
+        justifyContent: "space-between",
+        // marginTop: 94,
+        marginHorizontal: 16,
     },
     subText: {
         fontSize: 12,
@@ -285,6 +326,13 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         marginTop: 3,
         marginRight: 20
+    },
+    coverImg: {
+        backgroundColor: '#ff0000',
+        // height: '50%'
+        height: 50,
+        width: 200
+
     }
 });
 export default PetProfileScreen;

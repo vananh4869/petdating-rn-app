@@ -1,4 +1,4 @@
-import { SAVE_USER, UPDATE_USER, ADD_PET, UPDATE_PET, SAVE_PETS } from './type'
+import { SAVE_USER, UPDATE_USER, ADD_PET, UPDATE_PET, SAVE_PETS, DELETE_PET } from './type'
 
 
 export const saveUser = (user) => ({
@@ -26,8 +26,9 @@ export const updatePet = (pet) => ({
     pet
 })
 
-export const updateToken = (token) => ({
-    type: UPDATE_TOKEN,
-    token: token
+export const deletePet = (petId) => ({
+    type: DELETE_PET,
+    petId: petId
 })
+
 

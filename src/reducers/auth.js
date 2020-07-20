@@ -1,4 +1,4 @@
-import { SAVE_USER, UPDATE_USER, ADD_PET, UPDATE_PET, SAVE_PETS } from "../actions/type"
+import { SAVE_USER, UPDATE_USER, ADD_PET, UPDATE_PET, SAVE_PETS, DELETE_PET } from "../actions/type"
 
 const initialState = {
     user: {},
@@ -38,6 +38,16 @@ const authReducer = (state = initialState, action) => {
             return {
                 ...state,
                 pets: newPets2
+            }
+        case DELETE_PET:
+            console.log('A', action.petId)
+            const newPets3 = [...state.pets];
+            // const  = newPets3.filter(pet => pet.id !== action.petId)
+            // console.log(newPets3)
+
+            return {
+                ...state,
+                pets: newPets3.filter(pet => pet.id !== action.petId)
             }
         default:
             return state

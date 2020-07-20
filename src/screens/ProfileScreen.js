@@ -43,6 +43,7 @@ const ProfileScreen = ({ navigation }) => {
     // }
 
     const renderList = ({ item }) => {
+        console.log('A', item.id)
         return (
             <TouchableOpacity
                 onPress={() => {
@@ -56,8 +57,8 @@ const ProfileScreen = ({ navigation }) => {
             >
                 <View style={styles.mediaImageContainer}>
                     <Image source={item.avatar ? { uri: item.avatar } : require('../../assets/avatar.jpg')} style={styles.image} resizeMode="cover" />
-
-                </View ></TouchableOpacity>
+                </View >
+            </TouchableOpacity>
         )
     }
 
@@ -93,9 +94,26 @@ const ProfileScreen = ({ navigation }) => {
                     <FlatList
                         horizontal={true}
                         data={pets}
-                        renderItem={renderList}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                onPress={() => {
+                                    navigation.navigate('PetStackScreen', {
+                                        screen: 'PetProfileScreen',
+                                        params: {
+                                            petId: item.id
+                                        }
+                                    })
+                                }}
+                            >
+                                <View style={styles.mediaImageContainer}>
+                                    <Image source={item.avatar ? { uri: item.avatar } : require('../../assets/avatar.jpg')} style={styles.image} resizeMode="cover" />
+                                </View >
+                            </TouchableOpacity>
+
+                        )}
                         keyExtractor={item => `${item.id}`}
-                        refreshing={true}
+                        // refreshing={true}
+                        extraData={pets}
                     />
                     <View style={styles.mediaCount}>
                         <TouchableOpacity onPress={() => { navigation.navigate('PetStackScreen', { screen: 'AddPetScreen' }) }}>
