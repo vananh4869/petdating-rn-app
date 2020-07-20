@@ -31,13 +31,18 @@ const authReducer = (state = initialState, action) => {
                 pets: newPets
             }
         case UPDATE_PET:
-            const newPets2 = [...state.pets];
-            let updatedPet = newPets2.filter(pet => pet.id == action.pet.id);
-            updatedPet = { ...updatedPet, ...action.pet };
+            let updatePets = [...state.pets];
+            updatePets = updatePets.map(pet => {
+                if (pet.id == action.pet.id) {
+                    pet = { ...pet, ...action.pet }
+                }
+                return pet
+            })
+            console.log(updatePets)
 
             return {
                 ...state,
-                pets: newPets2
+                pets: updatePets
             }
         case DELETE_PET:
             console.log('A', action.petId)

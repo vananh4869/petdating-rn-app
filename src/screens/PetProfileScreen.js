@@ -18,6 +18,7 @@ const PetProfileScreen = ({ route, navigation }) => {
 
     const [data, setData] = useState({});
     // const [isChange, setIsChange] = useState(false);
+    const pets = useSelector(state => state.auth.pets);
 
 
     const dispatch = useDispatch();
@@ -42,78 +43,13 @@ const PetProfileScreen = ({ route, navigation }) => {
                 .catch(error => console.log(error))
         }
         getPetInfo()
-    }, [petId]);
+        return () => {
+            setData({
 
-    // const onUpdateUser = () => {
-    //     console.log(data)
-    //     Axios.put('/users', {
-    //         updateFields: {
-    //             ...data
-    //         }
-    //     })
-    //         .then(res => {
-    //             console.log(res.data)
-    //             dispatch(updateUser(data))
-    //             setIsChange(false)
-    //         })
-    //         .catch(error => console.error(error));
-    //     navigation.navigate('Profile')
-    // }
+            })
+        }
+    }, [petId, pets]);
 
-    // const handleInfo = (field, value) => {
-    //     setData({
-    //         ...data,
-    //         [field]: value
-    //     });
-    //     setIsChange(userInfo[field] != value);
-    // }
-
-    // const handleUploadPicture = () => {
-    //     let options = {
-    //         title: 'Select Image',
-    //         noData: true,
-    //         maxWidth: 500,
-    //         maxHeight: 500,
-    //     };
-    //     ImagePicker.showImagePicker(options, (response) => {
-    //         console.log('Response = ', response);
-
-    //         if (response.didCancel) {
-    //             console.log('User cancelled image picker');
-    //         } else {
-    //             const img = {
-    //                 uri: response.uri,
-    //                 type: mime.getType(response.uri),
-    //                 name:
-    //                     response.fileName ||
-    //                     response.uri.substr(response.uri.lastIndexOf('/') + 1)
-    //             }
-    //             const data = new FormData()
-    //             data.append('file', img)
-    //             data.append("upload_preset", "PetDating")
-    //             data.append("cloud_name", "anhtv4869")
-    //             fetch('https://api.cloudinary.com/v1_1/anhtv4869/image/upload', {
-    //                 method: 'POST',
-    //                 body: data,
-    //                 headers: {
-    //                     'Accept': 'application/json',
-    //                     'Content-Type': 'multipart/form-data'
-    //                 }
-    //             })
-    //                 // .then(res => res.json())
-    //                 .then(res => {
-    //                     // setInfo({ avatar: data.url })
-    //                     setData({
-    //                         ...data,
-    //                         avatar: res.url
-    //                     })
-    //                     console.log(res)
-    //                 }).catch(e => {
-    //                     console.error(e)
-    //                 })
-    //         }
-    //     });
-    // }
 
     const _delete = () => {
         Axios.delete(`/pets/${petId}`)
@@ -144,7 +80,7 @@ const PetProfileScreen = ({ route, navigation }) => {
     }
 
     const onEditPet = () => {
-
+        navigation.navigate('EditPetScreen', { petInfo: data, petId: petId })
     }
     return (
         <SafeAreaView style={styles.container}>
