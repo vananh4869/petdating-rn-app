@@ -10,6 +10,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateUser, deletePet } from '../actions/auth';
+import Loading from '../components/Loading';
 
 
 
@@ -17,8 +18,8 @@ const PetProfileScreen = ({ route, navigation }) => {
     const { petId } = route.params;
 
     const [data, setData] = useState({});
-    // const [isChange, setIsChange] = useState(false);
     const pets = useSelector(state => state.auth.pets);
+    const [isLoading, setIsLoading] = useState(true);
 
 
     const dispatch = useDispatch();
@@ -39,14 +40,14 @@ const PetProfileScreen = ({ route, navigation }) => {
                         avatar: pet.avatar,
                         introduction: pet.introduction,
                     })
+                    setIsLoading(false)
+                    console.log(isLoading)
                 })
                 .catch(error => console.log(error))
         }
         getPetInfo()
         return () => {
-            setData({
-
-            })
+            setIsLoading(true)
         }
     }, [petId, pets]);
 
@@ -83,60 +84,64 @@ const PetProfileScreen = ({ route, navigation }) => {
         navigation.navigate('EditPetScreen', { petInfo: data, petId: petId })
     }
     return (
+
         <SafeAreaView style={styles.container}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.titleBar}>
-                    <TouchableOpacity
-                        onPress={onDeletePet}
-                    >
-                        <Entypo name='trash' size={30} color='#ff0000' />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={onEditPet}
-                    >
-                        <Feather name='edit' size={30} />
-                    </TouchableOpacity>
-                </View>
-                <View style={{ alignSelf: "center", paddingTop: 20 }}>
-                    <View style={styles.profileImage}>
-                        <Image source={data.avatar ? { uri: data.avatar } : require('../../assets/avatar.jpg')} style={styles.image} resizeMode="cover"></Image>
-                    </View>
-                </View>
 
-                <View style={styles.infoContainer}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{data.name}</Text>
+            {isLoading ? <Loading></Loading> :
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <View style={styles.titleBar}>
+                        <TouchableOpacity
+                            onPress={onDeletePet}
+                        >
+                            <Entypo name='trash' size={30} color='#ff0000' />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={onEditPet}
+                        >
+                            <Feather name='edit' size={30} />
+                        </TouchableOpacity>
                     </View>
-                </View>
-
-                <View style={styles.statsContainer}>
-                    <View style={styles.statsBox}>
-                        <Text style={[styles.text, styles.subText]}>Age</Text>
-                        <Text style={[styles.text, { fontSize: 24 }]}>{data.age}</Text>
-                    </View>
-                    <View style={styles.statsBox}>
-                        <Text style={[styles.text, styles.subText]}>Weight</Text>
-                        <Text style={[styles.text, { fontSize: 24 }]}>{data.weight}</Text>
-                    </View>
-                </View>
-                <View style={styles.statsContainer}>
-                    <View style={styles.statsBox}>
-                        <Text style={[styles.text, styles.subText]}>Gender</Text>
-                        <Text style={[styles.text, { fontSize: 24 }]}>{data.gender == 1 ? 'male' : 'female'}</Text>
-                    </View>
-                    <View style={styles.statsBox}>
-                        <Text style={[styles.text, styles.subText]}>Breed</Text>
-                        <Text style={[styles.text, { fontSize: 24 }]}>{data.breed}</Text>
-                    </View>
-                </View>
-                <View style={styles.statsContainer}>
-                    <View style={styles.statsBox}>
-                        <Text style={[styles.text, styles.subText]}>Introduction</Text>
-                        <Text style={[styles.text, { fontSize: 24 }]}>{data.introduction}</Text>
+                    <View style={{ alignSelf: "center", paddingTop: 20 }}>
+                        <View style={styles.profileImage}>
+                            <Image source={data.avatar ? { uri: data.avatar } : require('../../assets/avatar.jpg')} style={styles.image} resizeMode="cover"></Image>
+                        </View>
                     </View>
 
-                </View>
-            </ScrollView>
+                    <View style={styles.infoContainer}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>{data.name}</Text>
+                        </View>
+                    </View>
+
+                    <View style={styles.statsContainer}>
+                        <View style={styles.statsBox}>
+                            <Text style={[styles.text, styles.subText]}>Age</Text>
+                            <Text style={[styles.text, { fontSize: 24 }]}>{data.age}</Text>
+                        </View>
+                        <View style={styles.statsBox}>
+                            <Text style={[styles.text, styles.subText]}>Weight</Text>
+                            <Text style={[styles.text, { fontSize: 24 }]}>{data.weight}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.statsContainer}>
+                        <View style={styles.statsBox}>
+                            <Text style={[styles.text, styles.subText]}>Gender</Text>
+                            <Text style={[styles.text, { fontSize: 24 }]}>{data.gender == 1 ? 'male' : 'female'}</Text>
+                        </View>
+                        <View style={styles.statsBox}>
+                            <Text style={[styles.text, styles.subText]}>Breed</Text>
+                            <Text style={[styles.text, { fontSize: 24 }]}>{data.breed}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.statsContainer}>
+                        <View style={styles.statsBox}>
+                            <Text style={[styles.text, styles.subText]}>Introduction</Text>
+                            <Text style={[styles.text, { fontSize: 24 }]}>{data.introduction}</Text>
+                        </View>
+
+                    </View>
+                </ScrollView>
+            }
         </SafeAreaView>
     )
 };

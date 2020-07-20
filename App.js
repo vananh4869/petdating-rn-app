@@ -22,6 +22,7 @@ import { Provider } from 'react-redux';
 import store from './src/store';
 import ProfileStackScreen from './src/screens/ProfileStackScreen';
 import PetStackScreen from './src/screens/PetStackScreen';
+import Loading from './src/components/Loading';
 
 
 
@@ -152,9 +153,7 @@ const App = () => {
   if (loginState.isLoading) {
     console.log('isLoading');
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
+      <Loading />
     );
   }
   return (
