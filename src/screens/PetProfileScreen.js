@@ -45,11 +45,16 @@ const PetProfileScreen = ({ route, navigation }) => {
                 })
                 .catch(error => console.log(error))
         }
-        getPetInfo()
-        return () => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            // The screen is focused
             setIsLoading(true)
-        }
-    }, [petId]);
+            // Call any action
+            getPetInfo()
+        });
+
+
+        return unsubscribe;
+    }, [navigation, petId]);
 
 
     const _delete = () => {
