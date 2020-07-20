@@ -30,7 +30,7 @@ const PetStackScreen = ({ navigation }) => (
             title: 'Add Pet',
             headerLeft: () => (
                 <Icon.Button name="arrow-back" size={24} color="#52575D" backgroundColor='#fff'
-                    onPress={() => navigation.navigate('PetProfileScreen')}></Icon.Button>
+                    onPress={() => navigation.navigate('Profile')}></Icon.Button>
             )
         }} />
         <PetStack.Screen name='EditPetScreen' component={EditPetScreen} options={{
