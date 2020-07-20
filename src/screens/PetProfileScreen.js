@@ -49,7 +49,7 @@ const PetProfileScreen = ({ route, navigation }) => {
         return () => {
             setIsLoading(true)
         }
-    }, [petId, pets]);
+    }, [petId]);
 
 
     const _delete = () => {

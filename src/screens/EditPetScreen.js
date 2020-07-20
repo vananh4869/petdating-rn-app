@@ -118,7 +118,7 @@ const EditPetScreen = ({ route, navigation }) => {
             }
         }
 
-        navigation.navigate('PetProfileScreen', { petId: petId })
+        navigation.navigate('Profile')
     }
 
     const handleInfo = (field, value) => {
