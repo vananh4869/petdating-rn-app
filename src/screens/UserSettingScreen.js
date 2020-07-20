@@ -92,6 +92,7 @@ const UserSettingScreen = ({ route, navigation }) => {
                     console.log('cc:', res.data)
                     dispatch(updateUser(data))
                     setIsChange(false)
+                    navigation.goBack();
                 })
                 .catch(error => console.error(error));
         } else {
@@ -104,10 +105,10 @@ const UserSettingScreen = ({ route, navigation }) => {
                     console.log(res.data)
                     dispatch(updateUser(data))
                     setIsChange(false)
+                    navigation.goBack();
                 })
                 .catch(error => console.error(error));
         }
-        navigation.goBack();
     }
 
     const handleInfo = (field, value) => {

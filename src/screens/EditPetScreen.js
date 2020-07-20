@@ -99,6 +99,7 @@ const EditPetScreen = ({ route, navigation }) => {
                         console.log('cc:', res.data)
                         dispatch(updatePet(res.data.data))
                         setIsChange(false)
+                        navigation.navigate('PetProfileScreen')
                     })
                     .catch(error => console.error(error));
             } else {
@@ -113,12 +114,14 @@ const EditPetScreen = ({ route, navigation }) => {
                         console.log('cc:', res.data)
                         dispatch(updatePet(res.data.data))
                         setIsChange(false)
+                        navigation.navigate('PetProfileScreen')
                     })
                     .catch(error => console.error(error));
             }
+        } else {
+            navigation.navigate('PetProfileScreen')
         }
 
-        navigation.navigate('Profile')
     }
 
     const handleInfo = (field, value) => {

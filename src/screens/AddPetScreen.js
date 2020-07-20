@@ -113,9 +113,9 @@ const AddPetScreen = ({ navigation }) => {
             .then(res => {
                 console.log('AAAA', res.data)
                 dispatch(addPet(res.data.data))
+                navigation.navigate('Profile')
             })
             .catch(error => console.error(error));
-        navigation.navigate('Profile')
         resetData();
     }
 
